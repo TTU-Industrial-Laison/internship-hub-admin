@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Eye, EyeOff, Lock, User } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +22,7 @@ import {
 } from "@/components/ui/field";
 
 import { loginSchema, type LoginValues } from "@/lib/schemas/auth";
+import { toast } from "@/lib/providers/toaster";
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -37,11 +37,6 @@ export function LoginForm() {
   });
 
   function onSubmit(data: LoginValues) {
-    toast.success("Login attempted", {
-      description: `Logging in as ${
-        activeTab === "staff-id" ? "Staff" : "Student"
-      } with ${data.identifier}`,
-    });
     console.log("Submitted:", { ...data, type: activeTab });
   }
 
