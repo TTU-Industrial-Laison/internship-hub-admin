@@ -1,4 +1,10 @@
-import { LayoutDashboard, Calendar, Users, GraduationCap,Map } from "lucide-react";
+import {
+  LayoutDashboard,
+  Calendar,
+  Users,
+  GraduationCap,
+  Map,
+} from "lucide-react";
 
 export const sideBarItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -10,4 +16,4 @@ export const sideBarItems = [
   },
   { label: "Supervisors", href: "/dashboard/supervisors", icon: Users },
   { label: "Students", href: "/dashboard/students", icon: GraduationCap },
-];
+] as const;

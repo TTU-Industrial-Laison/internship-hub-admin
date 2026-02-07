@@ -10,4 +10,4 @@ export const sideBarNavItems = [
   },
   { label: "Supervisors", href: "/dashboard/supervisors", icon: Users },
   { label: "Students", href: "/dashboard/students", icon: GraduationCap },
-];
+] as const;
