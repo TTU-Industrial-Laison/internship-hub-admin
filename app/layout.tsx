@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Bai_Jamjuree } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "react-hot-toast";
 import { QueryProvider } from "@/lib/providers/query-provider";
+import { Toaster } from "@/lib/providers/toaster";
 
 const bai_Jamjuree = Bai_Jamjuree({
   subsets: ["latin"],
