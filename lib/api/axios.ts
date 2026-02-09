@@ -19,9 +19,8 @@ const handleApiError = (error: AxiosError<ApiErrorResponse>) => {
   }
 
   const message =
-    error.response?.data?.error ||
-    error.response?.data?.message ||
-    error.message;
+    // error.response?.data?.error ||
+    error.response?.data?.message || error.message;
 
   return Promise.reject(new Error(message));
 };
@@ -31,6 +30,7 @@ const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 // ✅ Create axios instance
 export const api = axios.create({
   baseURL,
+  withCredentials: true,
 });
 
 // ✅ Attach interceptor
