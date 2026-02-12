@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Bai_Jamjuree } from "next/font/google";
 import "./globals.css";
 import { QueryProvider } from "@/lib/providers/query-provider";
-import { Toaster } from "@/lib/providers/toaster";
+import { Toaster } from "@/lib/providers/toaster-provider";
+import { StoreProvider } from "@/lib/providers/store-provider";
+import { SessionInitializer } from "@/components/auth/session-initializer";
 
 const bai_Jamjuree = Bai_Jamjuree({
   subsets: ["latin"],
@@ -24,9 +26,12 @@ export default function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <body className={`${bai_Jamjuree.className} antialiased`}>
-        <QueryProvider>
-          <main>{children}</main>
-        </QueryProvider>
+        <StoreProvider>
+          <SessionInitializer />
+          <QueryProvider>
+            <main>{children}</main>
+          </QueryProvider>
+        </StoreProvider>
         <Toaster />
       </body>
     </html>
