@@ -6,7 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Loader, RefreshCw } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { toast } from "@/lib/providers/toaster";
+import { toast } from "@/lib/providers/toaster-provider";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -33,7 +33,10 @@ import {
   verifyEmailSchema,
   VerifyEmailValues,
 } from "@/lib/validations/forms/auth";
-import { useResendVerification, useVerifyEmail } from "@/lib/hooks/use-auth";
+import {
+  useResendVerification,
+  useVerifyEmail,
+} from "@/lib/hooks/mutations/use-auth";
 import Link from "next/link";
 
 export function VerifyEmailForm() {
@@ -111,7 +114,7 @@ export function VerifyEmailForm() {
                   const slotStyles = cn(
                     "size-14 text-lg border border-gray-400 rounded-md transition-colors",
                     fieldState.invalid &&
-                      "border-destructive ring-destructive text-destructive"
+                      "border-destructive ring-destructive text-destructive",
                   );
 
                   return (
@@ -128,7 +131,7 @@ export function VerifyEmailForm() {
                           disabled={isResending || !email || isVerifying}
                           className={cn(
                             "h-auto p-0 text-xs font-normal text-muted-foreground hover:text-indigo-600 transition-colors",
-                            isResending && "opacity-50"
+                            isResending && "opacity-50",
                           )}
                         >
                           {isResending ? (
@@ -200,7 +203,7 @@ export function VerifyEmailForm() {
               href="/auth/login"
               className={cn(
                 "flex items-center text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors",
-                isVerifying && "pointer-events-none opacity-50"
+                isVerifying && "pointer-events-none opacity-50",
               )}
             >
               <ArrowLeft className="mr-2 h-4 w-4" />

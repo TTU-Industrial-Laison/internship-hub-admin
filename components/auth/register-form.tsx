@@ -28,7 +28,7 @@ import {
   registerStudentSchema,
   RegisterStudentValues,
 } from "@/lib/validations/forms/auth";
-import { useRegisterStudent } from "@/lib/hooks/use-auth";
+import { useRegisterStudent } from "@/lib/hooks/mutations/use-auth";
 
 export function RegisterForm() {
   const { mutate: register, isPending } = useRegisterStudent();
@@ -176,10 +176,7 @@ export function RegisterForm() {
             >
               {isPending ? (
                 <>
-                  <Loader
-                    className="h-4 w-4 animate-spin"
-                    strokeWidth={2.5}
-                  />
+                  <Loader className="h-4 w-4 animate-spin" strokeWidth={2.5} />
                   Creating Account
                 </>
               ) : (

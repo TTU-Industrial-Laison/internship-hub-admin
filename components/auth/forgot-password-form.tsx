@@ -27,7 +27,7 @@ import {
   forgotPasswordSchema,
   ForgotPasswordValues,
 } from "@/lib/validations/forms/auth";
-import { useForgotPassword } from "@/lib/hooks/use-auth";
+import { useForgotPassword } from "@/lib/hooks/mutations/use-auth";
 
 export function ForgotPasswordForm() {
   const { mutate: forgotPassword, isPending } = useForgotPassword();
@@ -89,10 +89,7 @@ export function ForgotPasswordForm() {
             >
               {isPending ? (
                 <>
-                  <Loader
-                    className="h-4 w-4 animate-spin"
-                    strokeWidth={2.5}
-                  />
+                  <Loader className="h-4 w-4 animate-spin" strokeWidth={2.5} />
                   Sending Link
                 </>
               ) : (

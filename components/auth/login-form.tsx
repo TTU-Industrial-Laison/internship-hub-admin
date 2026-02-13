@@ -25,7 +25,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { loginSchema, LoginValues } from "@/lib/validations/forms/auth";
-import { useLogin } from "@/lib/hooks/use-auth";
+import { useLogin } from "@/lib/hooks/mutations/use-auth";
 
 export function LoginForm() {
   const { mutate: login, isPending } = useLogin();
@@ -139,10 +139,7 @@ export function LoginForm() {
             >
               {isPending ? (
                 <>
-                  <Loader
-                    className="h-4 w-4 animate-spin"
-                    strokeWidth={2.5}
-                  />
+                  <Loader className="h-4 w-4 animate-spin" strokeWidth={2.5} />
                   Validating
                 </>
               ) : (
