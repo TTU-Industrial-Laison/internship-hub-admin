@@ -49,7 +49,7 @@ export function DashboardStats() {
       {stats.map((stat, index) => (
         <div
           key={index}
-          className="flex items-center w-full p-4 gap-3 bg-white rounded-lg border border-gray-300 shadow-card hover:shadow transition-shadow"
+          className="flex items-center w-full p-4 gap-3 bg-white rounded-lg border border-gray-300 shadow-card transition-shadow"
         >
           <div
             className={`p-2 rounded-full flex items-center justify-center ${stat.iconBg}`}
