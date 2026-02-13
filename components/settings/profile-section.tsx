@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useAppSelector } from "@/lib/store/hooks";
 import { selectCurrentUser } from "@/lib/store/slices/auth-slice";
 import { CheckCircle2, Mail, Camera, Shield } from "lucide-react";
+import { ProfileImageDialog } from "./profile-image-dialog";
 
 export function ProfileSection() {
   const user = useAppSelector(selectCurrentUser);
@@ -32,13 +33,15 @@ export function ProfileSection() {
                 {initials}
               </AvatarFallback>
             </Avatar>
-            <Button
-              size="icon"
-              variant="secondary"
-              className="absolute bottom-0 right-0 h-8 w-8 rounded-full shadow-sm border border-white"
-            >
-              <Camera className="h-4 w-4 text-slate-600" />
-            </Button>
+            <ProfileImageDialog>
+              <Button
+                size="icon"
+                variant="secondary"
+                className="absolute bottom-0 right-0 h-8 w-8 rounded-full shadow-sm border border-white cursor-pointer"
+              >
+                <Camera className="h-4 w-4 text-slate-600" />
+              </Button>
+            </ProfileImageDialog>
           </div>
 
           <div className="flex-1 text-center sm:text-left pt-2 sm:pt-0">
@@ -54,7 +57,9 @@ export function ProfileSection() {
           </div>
 
           <div className="flex gap-2 mt-2 sm:mt-0">
-            <Button>Edit Profile</Button>
+            <ProfileImageDialog>
+              <Button>Edit Profile</Button>
+            </ProfileImageDialog>
           </div>
         </div>
 
