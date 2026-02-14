@@ -32,7 +32,7 @@ import { useForgotPassword } from "@/lib/hooks/mutations/use-auth";
 export function ForgotPasswordForm() {
   const { mutate: forgotPassword, isPending } = useForgotPassword();
 
-  const { control, handleSubmit } = useForm<ForgotPasswordValues>({
+  const { control, handleSubmit, reset } = useForm<ForgotPasswordValues>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
       email: "",
@@ -41,6 +41,7 @@ export function ForgotPasswordForm() {
 
   const onSubmit = (data: ForgotPasswordValues) => {
     forgotPassword(data);
+    reset();
   };
 
   return (

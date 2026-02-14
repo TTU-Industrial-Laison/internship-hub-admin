@@ -31,7 +31,7 @@ export function LoginForm() {
   const { mutate: login, isPending } = useLogin();
   const [showPassword, setShowPassword] = useState(false);
 
-  const { control, handleSubmit } = useForm<LoginValues>({
+  const { control, handleSubmit, reset } = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "admin@ttu.edu.gh",
@@ -41,6 +41,7 @@ export function LoginForm() {
 
   const onSubmit = (data: LoginValues) => {
     login(data);
+    reset();
   };
 
   return (
@@ -148,7 +149,7 @@ export function LoginForm() {
             </Button>
           </form>
         </CardContent>
-        <CardFooter className="flex justify-center pt-2">
+        {/* <CardFooter className="flex justify-center pt-2">
           <div className="text-sm text-muted-foreground">
             Don&apos;t have an account?{" "}
             <Link
@@ -161,7 +162,7 @@ export function LoginForm() {
               Sign up
             </Link>
           </div>
-        </CardFooter>
+        </CardFooter> */}
       </Card>
     </div>
   );

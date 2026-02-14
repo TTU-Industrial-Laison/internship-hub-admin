@@ -46,7 +46,7 @@ export function ResetPasswordForm() {
 
   const { mutate: resetPassword, isPending } = useResetPassword();
 
-  const { control, handleSubmit } = useForm<ResetPasswordValues>({
+  const { control, handleSubmit, reset } = useForm<ResetPasswordValues>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
       email: email || "",
@@ -58,6 +58,7 @@ export function ResetPasswordForm() {
 
   const onSubmit = (data: ResetPasswordValues) => {
     resetPassword(data);
+    reset();
   };
 
   if (!email || !code) {
