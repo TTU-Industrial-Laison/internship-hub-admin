@@ -8,7 +8,6 @@ import {
 } from "@/lib/store/slices/auth-slice";
 import { api } from "@/lib/api/axios";
 import { API_ENDPOINTS } from "@/lib/constants/api-endpoints";
-import axios from "axios";
 
 /**
  * Initializes the auth state by checking the session on mount.
@@ -37,25 +36,7 @@ export function SessionInitializer() {
       }
     };
 
-    const keepAlive = async () => {
-      try {
-        await axios.get("/api/health/app");
-        console.log("✅ Keep-alive ping sent");
-      } catch (err) {
-        console.log("❌ Keep-alive failed", err);
-      }
-    };
-
-    // Run immediately
     checkSession();
-    keepAlive();
-
-    // Keep alive every 10 minutes (600000 ms)
-    const interval = setInterval(() => {
-      keepAlive();
-    }, 600000);
-
-    return () => clearInterval(interval);
   }, [dispatch]);
 
   return null;

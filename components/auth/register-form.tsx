@@ -49,7 +49,7 @@ export function RegisterForm() {
   };
 
   return (
-    <div className="w-full max-w-lg animate-in fade-in slide-in-from-bottom-8 duration-700">
+    <div className="w-full max-w-lg">
       <Card>
         <CardHeader className="space-y-2 text-center">
           <CardTitle className="text-3xl font-extrabold tracking-tight">

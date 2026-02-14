@@ -62,7 +62,7 @@ export function ResetPasswordForm() {
 
   if (!email || !code) {
     return (
-      <div className="w-full max-w-md animate-in fade-in slide-in-from-bottom-8 duration-700">
+      <div className="w-full max-w-md">
         <Card className="border-destructive/80">
           <CardContent className="pt-6">
             <div className="flex flex-col items-center text-center space-y-4">
@@ -87,7 +87,7 @@ export function ResetPasswordForm() {
   }
 
   return (
-    <div className="w-full max-w-md animate-in fade-in slide-in-from-bottom-8 duration-700">
+    <div className="w-full max-w-md  ">
       <Card>
         <CardHeader className="space-y-2 text-center">
           <CardTitle className="text-3xl font-extrabold tracking-tight">
@@ -215,7 +215,7 @@ export function ResetPasswordForm() {
             href="/auth/login"
             className={cn(
               "flex items-center text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors",
-              isPending && "pointer-events-none opacity-50"
+              isPending && "pointer-events-none opacity-50",
             )}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
