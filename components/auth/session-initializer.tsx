@@ -23,12 +23,16 @@ export function SessionInitializer() {
       try {
         const response = await api.get(API_ENDPOINTS.AUTH.SESSION);
 
+        const csrfToken = localStorage.getItem("csrf_token") || undefined;
+
         if (response.data?.id) {
-          dispatch(setCredentials(response.data));
+          dispatch(setCredentials({ user: response.data, csrfToken }));
         } else {
+          localStorage.removeItem("csrf_token");
           dispatch(clearCredentials());
         }
       } catch {
+        localStorage.removeItem("csrf_token");
         dispatch(clearCredentials());
       }
     };
