@@ -106,7 +106,7 @@ export function InternshipList({ events }: { events?: any[] }) {
   };
 
   return (
-    <div className="w-full border border-slate-200 rounded-lg overflow-hidden shadow-sm bg-white">
+    <div className="w-full border border-slate-300 rounded-lg overflow-hidden shadow-card bg-white">
       <Table>
         <TableHeader >
           <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 h-12">
@@ -132,7 +132,7 @@ export function InternshipList({ events }: { events?: any[] }) {
           {DUMMY_DATA.map((period) => (
             <TableRow
               key={period.id}
-              className="hover:bg-slate-50/50 transition-colors"
+              className="hover:bg-slate-50/50 transition-colors h-14"
             >
               <TableCell className="font-medium text-slate-900">
                 {period.name}
