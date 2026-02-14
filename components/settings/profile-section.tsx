@@ -58,7 +58,7 @@ export function ProfileSection() {
 
           <div className="flex gap-2 mt-2 sm:mt-0">
             <ProfileImageDialog>
-              <Button>Edit Profile</Button>
+              <Button size="sm">Edit Profile</Button>
             </ProfileImageDialog>
           </div>
         </div>
