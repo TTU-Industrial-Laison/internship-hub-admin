@@ -7,10 +7,14 @@ import {
   ResendVerificationValues,
   VerifyEmailValues,
 } from "@/lib/validations/forms/auth";
+import { LoginResponse } from "@/types/auth";
 
 export const authMutationsApi = {
   login: async (data: LoginValues) => {
-    const response = await api.post(API_ENDPOINTS.AUTH.LOGIN, data);
+    const response = await api.post<LoginResponse>(
+      API_ENDPOINTS.AUTH.LOGIN,
+      data,
+    );
     return response.data;
   },
 
@@ -27,7 +31,7 @@ export const authMutationsApi = {
   resendVerification: async (data: ResendVerificationValues) => {
     const response = await api.post(
       API_ENDPOINTS.AUTH.RESEND_VERIFICATION,
-      data
+      data,
     );
     return response.data;
   },

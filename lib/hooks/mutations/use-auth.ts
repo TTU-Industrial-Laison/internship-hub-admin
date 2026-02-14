@@ -27,7 +27,13 @@ export const useLogin = () => {
       try {
         const sessionResponse = await api.get(API_ENDPOINTS.AUTH.SESSION);
         if (sessionResponse.data?.id) {
-          dispatch(setCredentials(sessionResponse.data));
+          localStorage.setItem("csrf_token", data.csrfToken);
+          dispatch(
+            setCredentials({
+              user: sessionResponse.data,
+              csrfToken: data.csrfToken,
+            })
+          );
         }
       } catch {
         // Session fetch failed, but login succeeded — user will be redirected

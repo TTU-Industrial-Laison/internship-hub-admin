@@ -28,7 +28,7 @@ export const useUploadProfileImage = (
       try {
         const sessionResponse = await api.get(API_ENDPOINTS.AUTH.SESSION);
         if (sessionResponse.data?.id) {
-          dispatch(setCredentials(sessionResponse.data));
+          dispatch(setCredentials({ user: sessionResponse.data }));
         }
       } catch (error) {
         console.error("Failed to refresh session after upload", error);
