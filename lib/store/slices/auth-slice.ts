@@ -8,9 +8,10 @@ const initialState: AuthState = {
   isAuthenticated: false,
   isLoading: true, // true until we check session
   csrfToken: null,
+  isUploadingImage: false,
 };
 
-const authSlice = createSlice({
+export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
@@ -34,15 +35,24 @@ const authSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
+    setUploadingImage: (state, action: PayloadAction<boolean>) => {
+      state.isUploadingImage = action.payload;
+    },
   },
 });
 
-export const { setCredentials, clearCredentials, setLoading } =
-  authSlice.actions;
+export const {
+  setCredentials,
+  clearCredentials,
+  setLoading,
+  setUploadingImage,
+} = authSlice.actions;
 
 export const selectCurrentUser = (state: RootState) => state.auth.user;
 export const selectIsAuthenticated = (state: RootState) =>
   state.auth.isAuthenticated;
 export const selectIsLoading = (state: RootState) => state.auth.isLoading;
+export const selectIsUploadingImage = (state: RootState) =>
+  state.auth.isUploadingImage;
 
 export default authSlice.reducer;

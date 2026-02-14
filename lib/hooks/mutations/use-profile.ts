@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { profileMutationsApi } from "@/lib/api/mutations/profile";
 import { toast } from "@/lib/providers/toaster-provider";
 import { useAppDispatch } from "@/lib/store/hooks";
-import { setCredentials } from "@/lib/store/slices/auth-slice";
+import { setCredentials, authSlice } from "@/lib/store/slices/auth-slice";
 import { api } from "@/lib/api/axios";
 import { API_ENDPOINTS } from "@/lib/constants/api-endpoints";
 
@@ -17,8 +17,12 @@ export const useUploadProfileImage = (
 
   return useMutation({
     mutationFn: (file: File) => profileMutationsApi.uploadProfileImage(file),
+    onMutate: () => {
+      dispatch(authSlice.actions.setUploadingImage(true));
+    },
     onSuccess: async () => {
       toast.success("Profile picture updated successfully");
+      dispatch(authSlice.actions.setUploadingImage(false));
 
       if (options?.onSuccess) {
         options.onSuccess();
@@ -35,6 +39,7 @@ export const useUploadProfileImage = (
       }
     },
     onError: (error) => {
+      dispatch(authSlice.actions.setUploadingImage(false));
       toast.error(error?.message || "Failed to upload image");
     },
   });

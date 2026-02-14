@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FileBarChart, Settings, LogOut } from "lucide-react";
+import { FileBarChart, Settings, LogOut, Loader2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,11 +16,15 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { sideBarNavItems } from "@/lib/constants/navigation";
 import { useAppSelector } from "@/lib/store/hooks";
-import { selectCurrentUser } from "@/lib/store/slices/auth-slice";
+import {
+  selectCurrentUser,
+  selectIsUploadingImage,
+} from "@/lib/store/slices/auth-slice";
 
 export function Sidebar() {
   const pathname = usePathname();
   const user = useAppSelector(selectCurrentUser);
+  const isUploading = useAppSelector(selectIsUploadingImage);
   const initials = `${user?.firstName?.[0] || ""}${user?.lastName?.[0] || ""}`;
 
   return (
@@ -115,15 +119,23 @@ export function Sidebar() {
                 <p className="text-xs text-slate-400 mt-1">{user?.role}</p>
               </div>
 
-              <Avatar className="h-8 w-8 border border-white shadow-md">
+              <Avatar className="h-8 w-8 border border-white shadow-md relative">
                 <AvatarImage
                   src={user?.avatarUrl || "/placeholder.jpg"}
                   alt="Profile"
-                  className="object-cover object-top"
+                  className={cn(
+                    "object-cover object-top transition-opacity duration-300",
+                    isUploading && "opacity-50"
+                  )}
                 />
                 <AvatarFallback className="bg-indigo-100 text-indigo-700 text-base font-medium">
                   {initials}
                 </AvatarFallback>
+                {isUploading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-full">
+                    <Loader2 className="h-3 w-3 text-white animate-spin" />
+                  </div>
+                )}
               </Avatar>
             </div>
           </DropdownMenuTrigger>
@@ -133,7 +145,10 @@ export function Sidebar() {
               Admin Account
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive" className="cursor-pointer text-red-600">
+            <DropdownMenuItem
+              variant="destructive"
+              className="cursor-pointer text-red-600"
+            >
               <LogOut className="mr-2 h-4 w-4" />
               Logout
             </DropdownMenuItem>

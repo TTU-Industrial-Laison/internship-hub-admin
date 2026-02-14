@@ -15,6 +15,7 @@ export interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   csrfToken: string | null;
+  isUploadingImage?: boolean;
 }
 
 export interface LoginResponse {

@@ -4,12 +4,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useAppSelector } from "@/lib/store/hooks";
-import { selectCurrentUser } from "@/lib/store/slices/auth-slice";
-import { CheckCircle2, Mail, Camera, Shield } from "lucide-react";
+import {
+  selectCurrentUser,
+  selectIsUploadingImage,
+} from "@/lib/store/slices/auth-slice";
+import { CheckCircle2, Mail, Camera, Shield, Loader2 } from "lucide-react";
 import { ProfileImageDialog } from "./profile-image-dialog";
+import { cn } from "@/lib/utils";
 
 export function ProfileSection() {
   const user = useAppSelector(selectCurrentUser);
+  const isUploading = useAppSelector(selectIsUploadingImage);
   const initials = `${user?.firstName?.[0] || ""}${user?.lastName?.[0] || ""}`;
 
   return (
@@ -23,15 +28,23 @@ export function ProfileSection() {
         {/* Header Content with overlapping Avatar */}
         <div className="relative flex flex-col sm:flex-row items-center sm:items-end -mt-10 mb-6 gap-4">
           <div className="relative">
-            <Avatar className="h-24 w-24 border-4 border-white shadow-md">
+            <Avatar className="h-24 w-24 border-4 border-white shadow-md relative">
               <AvatarImage
                 src={user?.avatarUrl || "/placeholder.jpg"}
                 alt="Profile"
-                className="object-cover object-top"
+                className={cn(
+                  "object-cover object-top transition-opacity duration-300",
+                  isUploading && "opacity-50"
+                )}
               />
               <AvatarFallback className="bg-indigo-100 text-indigo-700 text-3xl font-medium">
                 {initials}
               </AvatarFallback>
+              {isUploading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-full">
+                  <Loader2 className="h-8 w-8 text-white animate-spin" />
+                </div>
+              )}
             </Avatar>
             <ProfileImageDialog>
               <Button
