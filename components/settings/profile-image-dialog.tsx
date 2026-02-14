@@ -21,7 +21,9 @@ interface ProfileImageDialogProps {
   children: React.ReactNode;
 }
 
-export function ProfileImageDialog({ children }: Readonly<ProfileImageDialogProps>) {
+export function ProfileImageDialog({
+  children,
+}: Readonly<ProfileImageDialogProps>) {
   const [open, setOpen] = useState(false);
   const [fileList, setFileList] = useState<FileList | undefined>(undefined);
   const user = useAppSelector(selectCurrentUser);
