@@ -38,12 +38,16 @@ export const api = axios.create({
 
 // ✅ Attach interceptor for Request (to add XSRF token)
 api.interceptors.request.use((config) => {
-  
   const store = getStore();
   const state = store?.getState();
-  const tokenFromStore = state?.auth?.csrfToken;
+  let tokenFromStore: string | null = state?.auth?.csrfToken ?? null;
 
-  console.log(tokenFromStore);
+  // Fallback to localStorage if not in store (e.g. on page reload)
+  if (!tokenFromStore && typeof window !== "undefined") {
+    tokenFromStore = localStorage.getItem("csrf_token");
+  }
+
+  console.log("Interceptor Token:", tokenFromStore);
 
   if (tokenFromStore) {
     config.headers["X-XSRF-TOKEN"] = tokenFromStore;
