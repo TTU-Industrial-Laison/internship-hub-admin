@@ -63,7 +63,7 @@ export const InternshipPeriod = () => {
           </div>
         </div>
       </div>
-      <InternshipList events={[]} />
+      <InternshipList />
       <PaginationTabs page={1} size={10} total={10} onPageChange={() => {}} />
     </section>
   );

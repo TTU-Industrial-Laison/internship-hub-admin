@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  MoreHorizontal,
-  Eye,
-  Edit,
-  Trash2,
-  Calendar,
-  Users,
-} from "lucide-react";
+import { MoreHorizontal, Eye, Edit, Trash2, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -28,69 +21,71 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
-// Dummy Type Definition
+// Type Definition matching API response
 type InternshipPeriod = {
   id: string;
   name: string;
-  startDate: string;
-  endDate: string;
-  status: "UPCOMING" | "ONGOING" | "COMPLETED";
-  academicYear: string;
-  totalStudents: number;
+  startDate: string; // ISO date string
+  endDate: string; // ISO date string
+  status: "ONGOING" | "UPCOMING" | "COMPLETED";
+  eligibleCategories: string[];
 };
 
-// Dummy Data
+// Dummy Data matching new API shape
 const DUMMY_DATA: InternshipPeriod[] = [
   {
     id: "1",
     name: "Industrial Attachment 2024",
-    academicYear: "2023/2024",
-    startDate: "2024-06-01",
-    endDate: "2024-08-31",
+    startDate: "2024-06-01T00:00:00.000Z",
+    endDate: "2024-08-31T00:00:00.000Z",
     status: "ONGOING",
-    totalStudents: 1250,
+    eligibleCategories: ["BTECH", "HND"],
   },
   {
     id: "2",
     name: "Long Vacation Internship 2024",
-    academicYear: "2023/2024",
-    startDate: "2024-06-15",
-    endDate: "2024-08-15",
+    startDate: "2024-06-15T00:00:00.000Z",
+    endDate: "2024-08-15T00:00:00.000Z",
     status: "UPCOMING",
-    totalStudents: 850,
+    eligibleCategories: ["HND"],
   },
   {
     id: "3",
     name: "Industrial Attachment 2023",
-    academicYear: "2022/2023",
-    startDate: "2023-06-01",
-    endDate: "2023-08-31",
+    startDate: "2023-06-01T00:00:00.000Z",
+    endDate: "2023-08-31T00:00:00.000Z",
     status: "COMPLETED",
-    totalStudents: 1100,
+    eligibleCategories: ["BTECH", "HND"],
   },
   {
     id: "4",
     name: "Short Internship (Level 200)",
-    academicYear: "2023/2024",
-    startDate: "2024-05-20",
-    endDate: "2024-07-20",
+    startDate: "2024-05-20T00:00:00.000Z",
+    endDate: "2024-07-20T00:00:00.000Z",
     status: "ONGOING",
-    totalStudents: 450,
+    eligibleCategories: ["BTECH"],
   },
   {
     id: "5",
     name: "Teaching Practice 2024",
-    academicYear: "2023/2024",
-    startDate: "2024-09-10",
-    endDate: "2024-12-10",
+    startDate: "2024-09-10T00:00:00.000Z",
+    endDate: "2024-12-10T00:00:00.000Z",
     status: "UPCOMING",
-    totalStudents: 600,
+    eligibleCategories: ["BTECH", "HND"],
   },
 ];
 
-export function InternshipList({ events }: { events?: any[] }) {
+// Formats ISO string to e.g. "2nd April 2024"
+const formatDate = (isoString: string): string => {
+  return format(new Date(isoString), "do MMMM yyyy");
+};
+
+export function InternshipList({ events }: { events?: InternshipPeriod[] }) {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+
+  const data = events ?? DUMMY_DATA;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -108,19 +103,19 @@ export function InternshipList({ events }: { events?: any[] }) {
   return (
     <div className="w-full border border-slate-300 rounded-lg overflow-hidden shadow-card bg-white">
       <Table>
-        <TableHeader >
+        <TableHeader>
           <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 h-12">
             <TableHead className="font-semibold text-slate-600">
               Period Name
             </TableHead>
             <TableHead className="font-semibold text-slate-600">
-              Duration
+              Start Date
             </TableHead>
             <TableHead className="font-semibold text-slate-600">
-              Academic Year
+              End Date
             </TableHead>
             <TableHead className="font-semibold text-slate-600">
-              Students
+              Eligible Categories
             </TableHead>
             <TableHead className="font-semibold text-slate-600">
               Status
@@ -129,7 +124,7 @@ export function InternshipList({ events }: { events?: any[] }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {DUMMY_DATA.map((period) => (
+          {data.map((period) => (
             <TableRow
               key={period.id}
               className="hover:bg-slate-50/50 transition-colors h-14"
@@ -141,21 +136,28 @@ export function InternshipList({ events }: { events?: any[] }) {
               <TableCell>
                 <div className="flex items-center gap-2 text-slate-500 text-sm">
                   <Calendar className="h-3.5 w-3.5" />
-                  <span>
-                    {new Date(period.startDate).toLocaleDateString()} -{" "}
-                    {new Date(period.endDate).toLocaleDateString()}
-                  </span>
+                  <span>{formatDate(period.startDate)}</span>
                 </div>
               </TableCell>
 
-              <TableCell className="text-slate-600">
-                {period.academicYear}
+              <TableCell>
+                <div className="flex items-center gap-2 text-slate-500 text-sm">
+                  <Calendar className="h-3.5 w-3.5" />
+                  <span>{formatDate(period.endDate)}</span>
+                </div>
               </TableCell>
 
               <TableCell>
-                <div className="flex items-center gap-1.5 text-slate-600">
-                  <Users className="h-3.5 w-3.5" />
-                  {period.totalStudents.toLocaleString()}
+                <div className="flex flex-wrap gap-1">
+                  {period.eligibleCategories.map((cat) => (
+                    <Badge
+                      key={cat}
+                      variant="outline"
+                      className="text-xs font-medium bg-violet-50 text-violet-700 border-violet-200 shadow-none"
+                    >
+                      {cat}
+                    </Badge>
+                  ))}
                 </div>
               </TableCell>
 
