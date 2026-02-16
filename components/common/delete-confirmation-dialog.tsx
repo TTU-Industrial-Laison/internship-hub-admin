@@ -12,22 +12,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Loader, OctagonAlert } from "lucide-react";
 import { useEffect, useState } from "react";
+import { DeleteConfirmationDialogProps } from "@/types/common/dialog";
 
-interface MinimalItem {
-  id: string;
-  name: string;
-}
-
-interface DeleteConfirmationDialogProps {
-  data: MinimalItem;
-  children: React.ReactNode;
-  onCloseDialog?: () => void;
-  onDelete?: (id: string) => void;
-  isDeleting?: boolean;
-  isSuccess?: boolean;
-  title?: string;
-  description?: string;
-}
 
 export function DeleteConfirmationDialog({
   data,
