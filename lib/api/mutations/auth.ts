@@ -59,4 +59,9 @@ export const authMutationsApi = {
     );
     return response.data;
   },
+
+  logout: async () => {
+    const response = await api.post(API_ENDPOINTS.AUTH.LOGOUT);
+    return response.data;
+  },
 };
