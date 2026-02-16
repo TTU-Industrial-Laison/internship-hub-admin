@@ -81,7 +81,7 @@ export function DeleteConfirmationDialog({
             />
           </div>
 
-          <DialogTitle className="text-center text-xl font-bold tracking-tight text-slate-900 px-6">
+          <DialogTitle className="text-center text-xl font-semibold tracking-tight text-slate-900 px-6">
             {dialogTitle}
           </DialogTitle>
 
