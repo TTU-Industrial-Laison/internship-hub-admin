@@ -5,7 +5,7 @@ export interface InternshipPeriod {
   name: string;
   startDate: string;
   endDate: string;
-  status: "UPCOMING" | "ONGOING" | "COMPLETED";
+  status: "ONGOING" | "COMPLETED";
   description?: string;
   eligibleCategories: string[];
 }
