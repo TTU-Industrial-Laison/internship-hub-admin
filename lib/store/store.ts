@@ -2,6 +2,7 @@
 
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/auth-slice";
+import searchFilterReducer from "./slices/search-filter-slice";
 
 // 🔒 Singleton store (client-side)
 let store: ReturnType<typeof makeStore> | undefined;
@@ -10,6 +11,7 @@ export const makeStore = () =>
   configureStore({
     reducer: {
       auth: authReducer,
+      searchFilter: searchFilterReducer,
     },
     devTools: process.env.NODE_ENV !== "production",
   });
