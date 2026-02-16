@@ -34,3 +34,14 @@ export function getDeviceInfo() {
 
   return { device, browser, os };
 }
+
+export const getStatusColor = (status: string) => {
+   switch (status) {
+     case "ONGOING":
+       return "bg-yellow-400 text-black";
+     case "COMPLETED":
+       return "bg-green-600 text-white";
+     default:
+       return "bg-slate-500 text-white";
+   }
+ };
