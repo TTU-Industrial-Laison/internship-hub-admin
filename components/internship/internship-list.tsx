@@ -20,20 +20,10 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn, getStatusColor } from "@/lib/utils";
 import { format } from "date-fns";
+import { InternshipPeriod } from "@/types/api/internship-period";
 
-// Type Definition matching API response
-type InternshipPeriod = {
-  id: string;
-  name: string;
-  startDate: string; // ISO date string
-  endDate: string; // ISO date string
-  status: "ONGOING" | "UPCOMING" | "COMPLETED";
-  eligibleCategories: string[];
-};
-
-// Dummy Data matching new API shape
 const DUMMY_DATA: InternshipPeriod[] = [
   {
     id: "1",
@@ -48,7 +38,7 @@ const DUMMY_DATA: InternshipPeriod[] = [
     name: "Long Vacation Internship 2024",
     startDate: "2024-06-15T00:00:00.000Z",
     endDate: "2024-08-15T00:00:00.000Z",
-    status: "UPCOMING",
+    status: "ONGOING",
     eligibleCategories: ["HND"],
   },
   {
@@ -72,8 +62,8 @@ const DUMMY_DATA: InternshipPeriod[] = [
     name: "Teaching Practice 2024",
     startDate: "2024-09-10T00:00:00.000Z",
     endDate: "2024-12-10T00:00:00.000Z",
-    status: "UPCOMING",
     eligibleCategories: ["BTECH", "HND"],
+    status: "COMPLETED",
   },
 ];
 
@@ -82,23 +72,10 @@ const formatDate = (isoString: string): string => {
   return format(new Date(isoString), "do MMMM yyyy");
 };
 
-export function InternshipList({ events }: { events?: InternshipPeriod[] }) {
+export function InternshipList() {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
-  const data = events ?? DUMMY_DATA;
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "ONGOING":
-        return "bg-green-100 text-green-700 hover:bg-green-100/80 border-green-200";
-      case "UPCOMING":
-        return "bg-blue-100 text-blue-700 hover:bg-blue-100/80 border-blue-200";
-      case "COMPLETED":
-        return "bg-slate-100 text-slate-700 hover:bg-slate-100/80 border-slate-200";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
+  const data = DUMMY_DATA;
 
   return (
     <div className="w-full border border-slate-300 rounded-lg overflow-hidden shadow-card bg-white">
@@ -113,9 +90,6 @@ export function InternshipList({ events }: { events?: InternshipPeriod[] }) {
             </TableHead>
             <TableHead className="font-semibold text-slate-600">
               End Date
-            </TableHead>
-            <TableHead className="font-semibold text-slate-600">
-              Eligible Categories
             </TableHead>
             <TableHead className="font-semibold text-slate-600">
               Status
@@ -134,33 +108,9 @@ export function InternshipList({ events }: { events?: InternshipPeriod[] }) {
                   {period.name}
                 </TableCell>
 
-                <TableCell>
-                  <div className="flex items-center gap-2 text-slate-500 text-sm">
-                    <Calendar className="h-3.5 w-3.5" />
-                    <span>{formatDate(period.startDate)}</span>
-                  </div>
-                </TableCell>
+                <TableCell>{formatDate(period.startDate)}</TableCell>
 
-                <TableCell>
-                  <div className="flex items-center gap-2 text-slate-500 text-sm">
-                    <Calendar className="h-3.5 w-3.5" />
-                    <span>{formatDate(period.endDate)}</span>
-                  </div>
-                </TableCell>
-
-                <TableCell>
-                  <div className="flex flex-wrap gap-1">
-                    {period.eligibleCategories.map((cat) => (
-                      <Badge
-                        key={cat}
-                        variant="outline"
-                        className="text-xs font-medium bg-violet-50 text-violet-700 border-violet-200 shadow-none"
-                      >
-                        {cat}
-                      </Badge>
-                    ))}
-                  </div>
-                </TableCell>
+                <TableCell>{formatDate(period.endDate)}</TableCell>
 
                 <TableCell>
                   <Badge
@@ -184,7 +134,7 @@ export function InternshipList({ events }: { events?: InternshipPeriod[] }) {
                     <DropdownMenuTrigger asChild>
                       <Button
                         variant="ghost"
-                        className="h-8 w-8 p-0 text-slate-400 hover:text-slate-600"
+                        className="h-8 w-8 p-0 text-slate-400 hover:text-slate-600 focus-visible:ring-1"
                       >
                         <span className="sr-only">Open menu</span>
                         <MoreHorizontal className="h-4 w-4" />
