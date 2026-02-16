@@ -22,6 +22,9 @@ export const API_ENDPOINTS = {
     UPDATE_PROFILE: (id: string | number) => `/profile/admin/${id}`,
     UPLOAD_PROFILE_PICTURE: "/profile/upload",
   },
+  INTERNSHIP: {
+    PERIODS: "/internship-periods",
+  },
 } as const;
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
