@@ -27,6 +27,7 @@ import { INTERNSHIP_STATUS_OPTIONS } from "@/lib/constants/internship-period";
 import { ERROR_MESSAGES } from "@/lib/constants/error-messages";
 
 import { InternshipList } from "./internship-list";
+import { InternshipPeriodDialog } from "./internship-period-dialog";
 
 export const InternshipPeriod = () => {
   const {
@@ -53,9 +54,11 @@ export const InternshipPeriod = () => {
     <section>
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-xl font-semibold">Internship Periods</h3>
-        <Button size="sm" className="rounded-full text-sm">
-          <Plus strokeWidth={2.5} className="mr-1 h-4 w-4" /> Add Period
-        </Button>
+        <InternshipPeriodDialog>
+          <Button size="sm" className="rounded-full text-sm">
+            <Plus strokeWidth={2.5} className="mr-1 h-4 w-4" /> Add Period
+          </Button>
+        </InternshipPeriodDialog>
       </div>
 
       <div className="my-4 flex flex-col md:flex-row justify-between items-center gap-4">
