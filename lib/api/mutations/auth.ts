@@ -9,7 +9,7 @@ import {
   VerifyEmailValues,
   ChangePasswordValues,
 } from "@/lib/validations/forms/auth";
-import { LoginResponse } from "@/types/auth";
+import { LoginResponse } from "@/types/api/auth";
 
 export const authMutationsApi = {
   login: async (data: LoginValues) => {
