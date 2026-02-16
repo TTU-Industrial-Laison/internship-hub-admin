@@ -21,35 +21,39 @@ export function PaginationTabs({
   total,
   onPageChange,
 }: Readonly<PaginationTabsProps>) {
-  const start = total === 0 ? 0 : page * size + 1;
-  const end = Math.min((page + 1) * size, total);
-  const totalPages = Math.max(1, Math.ceil(total / size));
+  const totalPages = Math.ceil(total / size) || 1;
+  const start = total === 0 ? 0 : (page - 1) * size + 1;
+  const end = Math.min(page * size, total);
+
+  const isDisabled = total === 0;
 
   const goto = (page: number) => {
-    if (page < 0 || page >= totalPages) return;
+    if (isDisabled || page < 1 || page > totalPages) return;
     onPageChange?.(page);
   };
 
   // condensed page numbers
   const getPageNumbers = () => {
+    if (isDisabled) return [1];
+
     const pages: (number | string)[] = [];
     const maxVisible = 5;
     const showEllipsis = totalPages > maxVisible + 2;
 
     if (!showEllipsis) {
-      return Array.from({ length: totalPages }, (_, i) => i);
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 
-    pages.push(0);
+    pages.push(1);
 
-    const start = Math.max(1, page - 1);
-    const end = Math.min(totalPages - 2, page + 1);
+    const startPage = Math.max(2, page - 1);
+    const endPage = Math.min(totalPages - 1, page + 1);
 
-    if (start > 1) pages.push("...");
-    for (let i = start; i <= end; i++) pages.push(i);
-    if (end < totalPages - 2) pages.push("...");
+    if (startPage > 2) pages.push("...");
+    for (let i = startPage; i <= endPage; i++) pages.push(i);
+    if (endPage < totalPages - 1) pages.push("...");
 
-    pages.push(totalPages - 1);
+    pages.push(totalPages);
 
     return pages;
   };
@@ -70,7 +74,9 @@ export function PaginationTabs({
             <PaginationPrevious
               href="#"
               className={`text-sm ${
-                page === 0 ? "pointer-events-none opacity-50" : ""
+                isDisabled || page <= 1
+                  ? "pointer-events-none opacity-50 text-gray-400"
+                  : ""
               }`}
               onClick={(e) => {
                 e.preventDefault();
@@ -88,14 +94,18 @@ export function PaginationTabs({
                 ) : (
                   <PaginationLink
                     href="#"
-                    className="!text-sm size-7"
+                    className={`!text-sm size-7 ${
+                      isDisabled
+                        ? "pointer-events-none opacity-50 text-gray-400"
+                        : ""
+                    }`}
                     isActive={p === page}
                     onClick={(e) => {
                       e.preventDefault();
                       goto(p as number);
                     }}
                   >
-                    {(p as number) + 1}
+                    {p}
                   </PaginationLink>
                 )}
               </PaginationItem>
@@ -106,7 +116,9 @@ export function PaginationTabs({
             <PaginationNext
               href="#"
               className={`text-sm ${
-                page === totalPages - 1 ? "pointer-events-none opacity-50" : ""
+                isDisabled || page >= totalPages
+                  ? "pointer-events-none opacity-50 text-gray-400"
+                  : ""
               }`}
               onClick={(e) => {
                 e.preventDefault();
