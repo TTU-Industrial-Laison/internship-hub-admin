@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreHorizontal, Eye, Edit, Trash2, Calendar } from "lucide-react";
+import { MoreHorizontal, Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -22,9 +22,10 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { cn, formatDate, getStatusColor } from "@/lib/utils";
 import { InternshipPeriod } from "@/types/api/internship-period";
-
-
-
+import { InternshipPeriodDialog } from "./internship-period-dialog";
+import { useDeleteInternshipPeriod } from "@/lib/hooks/mutations/use-internship-mutations";
+import { DeleteConfirmationDialog } from "@/components/common/delete-confirmation-dialog";
+import { Loader } from "lucide-react";
 
 interface InternshipListProps {
   events: InternshipPeriod[];
@@ -34,6 +35,8 @@ export function InternshipList({ events }: InternshipListProps) {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const data = events;
+
+  const deleteMutation = useDeleteInternshipPeriod();
 
   return (
     <div className="w-full border border-slate-300 rounded-lg overflow-hidden shadow-card bg-white">
@@ -101,19 +104,54 @@ export function InternshipList({ events }: InternshipListProps) {
                     <DropdownMenuContent align="end" className="w-[160px]">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem className="gap-2 cursor-pointer">
-                        <Eye className="h-4 w-4 text-slate-500" />
-                        View Details
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="gap-2 cursor-pointer">
-                        <Edit className="h-4 w-4 text-slate-500" />
-                        Edit Period
-                      </DropdownMenuItem>
+                      <InternshipPeriodDialog
+                        event={period}
+                        onCloseDialog={() => setOpenMenuId(null)}
+                      >
+                        <DropdownMenuItem
+                          className="gap-2 cursor-pointer"
+                          onSelect={(e) => e.preventDefault()}
+                        >
+                          <Edit className="h-4 w-4 text-slate-500" />
+                          Edit Period
+                        </DropdownMenuItem>
+                      </InternshipPeriodDialog>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem className="gap-2 text-red-600 focus:text-red-700 cursor-pointer">
-                        <Trash2 className="h-4 w-4" />
-                        Delete
-                      </DropdownMenuItem>
+                      <DeleteConfirmationDialog
+                        data={period}
+                        onDelete={(id) => deleteMutation.mutate(id)}
+                        isDeleting={
+                          deleteMutation.isPending &&
+                          deleteMutation.variables === period.id
+                        }
+                        isSuccess={
+                          deleteMutation.isSuccess &&
+                          deleteMutation.variables === period.id
+                        }
+                        onCloseDialog={() => setOpenMenuId(null)}
+                      >
+                        <DropdownMenuItem
+                          variant="destructive"
+                          className="gap-2 cursor-pointer"
+                          onSelect={(e) => e.preventDefault()}
+                        >
+                          {deleteMutation.isPending &&
+                          deleteMutation.variables === period.id ? (
+                            <>
+                              <Loader
+                                className="h-4 w-4 animate-spin"
+                                strokeWidth={2.5}
+                              />
+                              Deleting
+                            </>
+                          ) : (
+                            <>
+                              <Trash2 className="h-4 w-4" />
+                              Delete
+                            </>
+                          )}
+                        </DropdownMenuItem>
+                      </DeleteConfirmationDialog>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
