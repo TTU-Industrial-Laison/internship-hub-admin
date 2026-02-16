@@ -6,7 +6,7 @@ import { X, UploadCloud, Camera, Trash2 } from "lucide-react";
 import { toast } from "@/lib/providers/toaster-provider";
 import { ACCEPTED_FILE_TYPES } from "@/lib/constants/files";
 import { Button } from "../ui/button";
-import { ImageUploadProps } from "@/types/profile";
+import { ImageUploadProps } from "@/types/api/profile";
 
 export const ImageUpload = ({
   onChange,
