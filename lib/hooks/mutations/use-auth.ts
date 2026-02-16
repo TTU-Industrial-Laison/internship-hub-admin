@@ -3,7 +3,10 @@ import { authMutationsApi } from "@/lib/api/mutations/auth";
 import { toast } from "@/lib/providers/toaster-provider";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/lib/store/hooks";
-import { setCredentials } from "@/lib/store/slices/auth-slice";
+import {
+  setCredentials,
+  clearCredentials,
+} from "@/lib/store/slices/auth-slice";
 import { api } from "@/lib/api/axios";
 import { API_ENDPOINTS } from "@/lib/constants/api-endpoints";
 import {
@@ -163,6 +166,31 @@ export const useChangePassword = () => {
     onError: (error) => {
       console.error("Change password error:", error);
       toast.error(error.message || "Failed to change password");
+    },
+  });
+};
+
+export const useLogout = () => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  return useMutation({
+    mutationFn: () => authMutationsApi.logout(),
+    onSuccess: (data) => {
+      toast.success(data.message || "Logged out successfully");
+
+      // Clear Redux state
+      dispatch(clearCredentials());
+
+      // Clean up localStorage
+      localStorage.removeItem("csrf_token");
+
+      // Redirect to login
+      router.push("/auth/login");
+    },
+    onError: (error: any) => {
+      console.error("Logout error:", error);
+      toast.error(error.message || "Failed to logout");
     },
   });
 };
