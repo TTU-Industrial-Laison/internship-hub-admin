@@ -20,12 +20,15 @@ import {
   selectCurrentUser,
   selectIsUploadingImage,
 } from "@/lib/store/slices/auth-slice";
+import { useLogout } from "@/lib/hooks/mutations/use-auth";
 
 export function Sidebar() {
   const pathname = usePathname();
   const user = useAppSelector(selectCurrentUser);
   const isUploading = useAppSelector(selectIsUploadingImage);
   const initials = `${user?.firstName?.[0] || ""}${user?.lastName?.[0] || ""}`;
+
+  const { mutate: logout, isPending: isLoggingOut } = useLogout();
 
   return (
     <aside className="flex h-screen w-64 flex-col bg-gradient-to-b from-slate-900 to-slate-950 text-white">
@@ -146,11 +149,24 @@ export function Sidebar() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              variant="destructive"
-              className="cursor-pointer text-red-600"
+              disabled={isLoggingOut}
+              className="cursor-pointer text-red-600 focus:text-red-700 focus:bg-red-50"
+              onSelect={(e) => {
+                e.preventDefault();
+                logout();
+              }}
             >
-              <LogOut className="mr-2 h-4 w-4" />
-              Logout
+              {isLoggingOut ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin text-destructive" />
+                  Logging out
+                </>
+              ) : (
+                <>
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </>
+              )}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
