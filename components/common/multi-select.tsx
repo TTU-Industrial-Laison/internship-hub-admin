@@ -19,7 +19,7 @@ export const MultiSelect = ({
   placeholder = "Select options...",
   searchPlaceholder = "Search...",
   hasError = false,
-  maxSelections = 99,
+  maxSelections = 10,
   disabled = false,
   className,
 }: MultiSelectProps) => {
