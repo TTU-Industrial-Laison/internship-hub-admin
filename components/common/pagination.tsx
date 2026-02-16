@@ -65,7 +65,7 @@ export function PaginationTabs({
         <span className="text-primary font-bold">
           {start} - {end}
         </span>{" "}
-        of <span className="text-primary font-bold">{total}</span> items
+        of <span className="text-primary font-bold">{total}</span> {total === 1 ? "item" : "items"}
       </p>
 
       <Pagination className="w-auto mx-0">
