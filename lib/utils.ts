@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
+import { format } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -44,4 +45,9 @@ export const getStatusColor = (status: string) => {
      default:
        return "bg-slate-500 text-white";
    }
- };
+};
+ 
+// Formats ISO string to e.g. "2nd April 2024"
+export const formatDate = (isoString: string): string => {
+  return format(new Date(isoString), "do MMMM yyyy");
+};

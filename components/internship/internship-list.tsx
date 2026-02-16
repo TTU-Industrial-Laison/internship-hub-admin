@@ -20,62 +20,20 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
-import { cn, getStatusColor } from "@/lib/utils";
-import { format } from "date-fns";
+import { cn, formatDate, getStatusColor } from "@/lib/utils";
 import { InternshipPeriod } from "@/types/api/internship-period";
 
-const DUMMY_DATA: InternshipPeriod[] = [
-  {
-    id: "1",
-    name: "Industrial Attachment 2024",
-    startDate: "2024-06-01T00:00:00.000Z",
-    endDate: "2024-08-31T00:00:00.000Z",
-    status: "ONGOING",
-    eligibleCategories: ["BTECH", "HND"],
-  },
-  {
-    id: "2",
-    name: "Long Vacation Internship 2024",
-    startDate: "2024-06-15T00:00:00.000Z",
-    endDate: "2024-08-15T00:00:00.000Z",
-    status: "ONGOING",
-    eligibleCategories: ["HND"],
-  },
-  {
-    id: "3",
-    name: "Industrial Attachment 2023",
-    startDate: "2023-06-01T00:00:00.000Z",
-    endDate: "2023-08-31T00:00:00.000Z",
-    status: "COMPLETED",
-    eligibleCategories: ["BTECH", "HND"],
-  },
-  {
-    id: "4",
-    name: "Short Internship (Level 200)",
-    startDate: "2024-05-20T00:00:00.000Z",
-    endDate: "2024-07-20T00:00:00.000Z",
-    status: "ONGOING",
-    eligibleCategories: ["BTECH"],
-  },
-  {
-    id: "5",
-    name: "Teaching Practice 2024",
-    startDate: "2024-09-10T00:00:00.000Z",
-    endDate: "2024-12-10T00:00:00.000Z",
-    eligibleCategories: ["BTECH", "HND"],
-    status: "COMPLETED",
-  },
-];
 
-// Formats ISO string to e.g. "2nd April 2024"
-const formatDate = (isoString: string): string => {
-  return format(new Date(isoString), "do MMMM yyyy");
-};
 
-export function InternshipList() {
+
+interface InternshipListProps {
+  events: InternshipPeriod[];
+}
+
+export function InternshipList({ events }: InternshipListProps) {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
-  const data = DUMMY_DATA;
+  const data = events;
 
   return (
     <div className="w-full border border-slate-300 rounded-lg overflow-hidden shadow-card bg-white">

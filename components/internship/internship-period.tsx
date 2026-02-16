@@ -29,7 +29,6 @@ import { ERROR_MESSAGES } from "@/lib/constants/error-messages";
 import { InternshipList } from "./internship-list";
 
 export const InternshipPeriod = () => {
-
   const {
     filters,
     localSearchTerm,
@@ -101,6 +100,7 @@ export const InternshipPeriod = () => {
             <DateRangeSelect
               filters={filters}
               setDynamicParam={setDynamicParam}
+              isLoading={isLoading}
             />
           </div>
         </div>

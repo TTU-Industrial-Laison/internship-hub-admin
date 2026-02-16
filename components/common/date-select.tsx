@@ -15,11 +15,13 @@ import { FilterState } from "@/types/store/search-filter";
 interface DateRangeSelectProps {
   filters: FilterState;
   setDynamicParam: (key: string, value: string) => void;
+  isLoading?: boolean;
 }
 
 export const DateRangeSelect = ({
   filters,
   setDynamicParam,
+  isLoading,
 }: DateRangeSelectProps) => {
   const startDate = useMemo(
     () =>
@@ -66,6 +68,7 @@ export const DateRangeSelect = ({
         <Button
           variant="ghost"
           className="rounded-full h-9 hover:bg-transparent text-sm font-normal border border-gray-400 shadow-none min-w-65 hover:border-gray-400 transition-colors justify-start"
+          disabled={isLoading}
         >
           <div className="flex items-center gap-2 w-full">
             <CalendarIcon className="h-3.5! w-3.5!" strokeWidth={1.5} />
