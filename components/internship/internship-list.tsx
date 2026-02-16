@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreHorizontal, Edit, Trash2 } from "lucide-react";
+import { MoreHorizontal, Edit, Trash2, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -25,13 +25,12 @@ import { InternshipPeriod } from "@/types/api/internship-period";
 import { InternshipPeriodDialog } from "./internship-period-dialog";
 import { useDeleteInternshipPeriod } from "@/lib/hooks/mutations/use-internship-mutations";
 import { DeleteConfirmationDialog } from "@/components/common/delete-confirmation-dialog";
-import { Loader } from "lucide-react";
 
 interface InternshipListProps {
   events: InternshipPeriod[];
 }
 
-export function InternshipList({ events }: InternshipListProps) {
+export function InternshipList({ events }: Readonly<InternshipListProps>) {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const data = events;
@@ -77,7 +76,7 @@ export function InternshipList({ events }: InternshipListProps) {
                   <Badge
                     className={cn(
                       "font-medium shadow-none",
-                      getStatusColor(period.status)
+                      getStatusColor(period.status),
                     )}
                     variant="outline"
                   >
