@@ -32,7 +32,7 @@ import { useForgotPassword } from "@/lib/hooks/mutations/use-auth";
 export function ForgotPasswordForm() {
   const { mutate: forgotPassword, isPending } = useForgotPassword();
 
-  const { control, handleSubmit, reset } = useForm<ForgotPasswordValues>({
+  const { control, handleSubmit } = useForm<ForgotPasswordValues>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
       email: "",
@@ -41,7 +41,6 @@ export function ForgotPasswordForm() {
 
   const onSubmit = (data: ForgotPasswordValues) => {
     forgotPassword(data);
-    reset();
   };
 
   return (
@@ -91,10 +90,10 @@ export function ForgotPasswordForm() {
               {isPending ? (
                 <>
                   <Loader className="h-4 w-4 animate-spin" strokeWidth={2.5} />
-                  Sending Link
+                  Sending One time password
                 </>
               ) : (
-                "Send Reset Link"
+                "Send One time password"
               )}
             </Button>
           </form>

@@ -55,9 +55,9 @@ export function AuthGuard({
           {/* Stacked rings */}
           <div className="relative flex items-center justify-center h-16 w-16">
             <div className="absolute h-16 w-16 rounded-full border-2 border-indigo-100" />
-            <div className="absolute h-16 w-16 animate-spin rounded-full border-2 border-transparent border-t-indigo-700 [animation-duration:3s]" />
-            <div className="absolute h-11 w-11 animate-spin rounded-full border-2 border-transparent border-t-indigo-600 [animation-duration:1.5s]" />
-            <div className="absolute h-6 w-6 animate-spin rounded-full border-2 border-transparent border-t-indigo-800 [animation-duration:0.75s]" />
+            <div className="absolute h-16 w-16 animate-spin rounded-full border-2 border-transparent border-t-indigo-700 animation-duration-[3s]" />
+            <div className="absolute h-11 w-11 animate-spin rounded-full border-2 border-transparent border-t-indigo-600 animation-duration-[1.5s]" />
+            <div className="absolute h-6 w-6 animate-spin rounded-full border-2 border-transparent border-t-indigo-800 animation-duration-[0.75s]" />
             <div className="h-1.5 w-1.5 rounded-full bg-indigo-600" />
           </div>
 

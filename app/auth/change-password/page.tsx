@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { ChangePasswordForm } from "@/components/auth/change-password-form";
+import { AuthGuard } from "@/components/auth/auth-guard";
 
 export const metadata: Metadata = {
   title: "Change Password | InternshipHub",
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function ChangePasswordPage() {
-  return <ChangePasswordForm />;
+  return (
+    <AuthGuard>
+      <ChangePasswordForm />
+    </AuthGuard>
+  );
 }

@@ -13,7 +13,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -31,17 +30,16 @@ export function LoginForm() {
   const { mutate: login, isPending } = useLogin();
   const [showPassword, setShowPassword] = useState(false);
 
-  const { control, handleSubmit, reset } = useForm<LoginValues>({
+  const { control, handleSubmit } = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "admin@ttu.edu.gh",
-      password: "StrongPassword123!",
+      email: "",
+      password: "",
     },
   });
 
   const onSubmit = (data: LoginValues) => {
     login(data);
-    reset();
   };
 
   return (
@@ -68,7 +66,7 @@ export function LoginForm() {
                       {...field}
                       id="email"
                       type="email"
-                      placeholder="m@example.com"
+                      placeholder="admin@ttu.edu.gh"
                       aria-invalid={fieldState.invalid}
                       disabled={isPending}
                       className="h-12 rounded-xl bg-slate-50 border-slate-200 focus:border-indigo-500 focus:ring-indigo-500/20 transition-all"
@@ -149,20 +147,6 @@ export function LoginForm() {
             </Button>
           </form>
         </CardContent>
-        {/* <CardFooter className="flex justify-center pt-2">
-          <div className="text-sm text-muted-foreground">
-            Don&apos;t have an account?{" "}
-            <Link
-              href="/auth/register"
-              className={cn(
-                "font-semibold text-indigo-600 hover:text-indigo-500 hover:underline transition-colors",
-                isPending && "pointer-events-none opacity-50",
-              )}
-            >
-              Sign up
-            </Link>
-          </div>
-        </CardFooter> */}
       </Card>
     </div>
   );

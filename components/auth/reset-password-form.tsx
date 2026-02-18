@@ -61,46 +61,67 @@ export function ResetPasswordForm() {
     reset();
   };
 
-  if (!email || !code) {
-    return (
-      <div className="w-full max-w-md">
-        <Card className="border-destructive/80">
-          <CardContent className="pt-6">
-            <div className="flex flex-col items-center text-center space-y-4">
-              <div className="p-3 bg-destructive/10 rounded-full">
-                <XCircle className="h-8 w-8 text-destructive" />
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold">Invalid Reset Link</h3>
-                <p className="text-sm text-muted-foreground">
-                  The password reset link is invalid or has expired. Please
-                  request a new one.
-                </p>
-              </div>
-              <Button asChild className="w-full">
-                <Link href="/auth/forgot-password">Go Back</Link>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   return (
-    <div className="w-full max-w-md  ">
+    <div className="w-full max-w-md">
       <Card>
         <CardHeader className="space-y-2 text-center">
           <CardTitle className="text-3xl font-extrabold tracking-tight">
             Reset Password
           </CardTitle>
           <CardDescription className="text-base">
-            Enter your new password below
+            Enter your email, the code you received, and your new password
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <FieldGroup>
+              {/* Email Field */}
+              <Controller
+                control={control}
+                name="email"
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="email">Email address</FieldLabel>
+                    <Input
+                      {...field}
+                      id="email"
+                      type="email"
+                      placeholder="m@example.com"
+                      aria-invalid={fieldState.invalid}
+                      disabled={isPending || !!email}
+                      className="h-12 rounded-xl bg-slate-50 border-slate-200 focus:border-indigo-500 focus:ring-indigo-500/20 transition-all font-medium"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              {/* Code Field */}
+              <Controller
+                control={control}
+                name="code"
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="code">Verification Code</FieldLabel>
+                    <Input
+                      {...field}
+                      id="code"
+                      type="text"
+                      placeholder="Enter 6-digit code"
+                      aria-invalid={fieldState.invalid}
+                      disabled={isPending || !!code}
+                      className="h-12 rounded-xl bg-slate-50 border-slate-200 focus:border-indigo-500 focus:ring-indigo-500/20 transition-all font-mono text-center text-lg tracking-widest"
+                      maxLength={6}
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
               {/* New Password Field */}
               <Controller
                 control={control}
