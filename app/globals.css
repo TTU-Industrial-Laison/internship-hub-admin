@@ -188,4 +188,10 @@
   ::-webkit-scrollbar-track {
     background: transparent; /* track behind scrollbar */
   }
+  .maplibregl-popup-content {
+    @apply bg-transparent! shadow-none! p-0! rounded-none!;
+  }
+  .maplibregl-popup-tip {
+    @apply hidden!;
+  }
 }
