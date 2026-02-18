@@ -24,6 +24,7 @@ import {
   Maximize,
   Loader2,
   Mountain,
+  Home,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -138,11 +139,13 @@ type MapProps = {
    * Pass your theme value here.
    */
   theme?: Theme;
-  /** Custom map styles for light and dark themes. Overrides the default Carto styles. */
-  styles?: {
-    light?: MapStyleOption;
-    dark?: MapStyleOption;
-  };
+  /** Custom map styles for light and dark themes. Overrides the default Carto styles. Can be a single style or an object. */
+  styles?:
+    | MapStyleOption
+    | {
+        light?: MapStyleOption;
+        dark?: MapStyleOption;
+      };
   /** Map projection type. Use `{ type: "globe" }` for 3D globe view. */
   projection?: MapLibreGL.ProjectionSpecification;
   /**
@@ -197,13 +200,22 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
   const onViewportChangeRef = useRef(onViewportChange);
   onViewportChangeRef.current = onViewportChange;
 
-  const mapStyles = useMemo(
-    () => ({
-      dark: styles?.dark ?? defaultStyles.dark,
-      light: styles?.light ?? defaultStyles.light,
-    }),
-    [styles]
-  );
+  const mapStyles = useMemo(() => {
+    if (
+      typeof styles === "string" ||
+      (styles && "version" in (styles as object))
+    ) {
+      return {
+        dark: styles as MapStyleOption,
+        light: styles as MapStyleOption,
+      };
+    }
+    return {
+      dark: (styles as { dark?: MapStyleOption })?.dark ?? defaultStyles.dark,
+      light:
+        (styles as { light?: MapStyleOption })?.light ?? defaultStyles.light,
+    };
+  }, [styles]);
 
   // Expose the map instance to the parent component
   useImperativeHandle(ref, () => mapInstance as MapLibreGL.Map, [mapInstance]);
@@ -725,6 +737,10 @@ type MapControlsProps = {
   showFullscreen?: boolean;
   /** Show 3D view toggle button (default: false) */
   show3D?: boolean;
+  /** Show return to home button (default: false) */
+  showHome?: boolean;
+  /** Viewport to return to when home button is clicked */
+  homeViewport?: Partial<MapViewport>;
   /** Additional CSS classes for the controls container */
   className?: string;
   /** Callback with user coordinates when located */
@@ -780,12 +796,25 @@ function MapControls({
   showLocate = false,
   showFullscreen = false,
   show3D = false,
+  showHome = false,
+  homeViewport,
   className,
   onLocate,
 }: MapControlsProps) {
   const { map } = useMap();
   const [waitingForLocation, setWaitingForLocation] = useState(false);
   const [is3D, setIs3D] = useState(false);
+
+  const handleFlyToHome = useCallback(() => {
+    if (!map || !homeViewport) return;
+    map.flyTo({
+      center: homeViewport.center,
+      zoom: homeViewport.zoom,
+      bearing: homeViewport.bearing ?? 0,
+      pitch: homeViewport.pitch ?? 0,
+      duration: 1500,
+    });
+  }, [map, homeViewport]);
 
   useEffect(() => {
     if (!map) return;
@@ -904,12 +933,14 @@ function MapControls({
             onClick={is3D ? handleResetBearing : handle3DView}
             label={is3D ? "Reset to 2D" : "Switch to 3D View"}
           >
-            <Mountain
-              className={cn(
-                "size-4 transition-colors",
-                is3D ? "text-primary" : "text-slate-500"
-              )}
-            />
+            <Mountain className={cn("size-4 transition-colors")} />
+          </ControlButton>
+        </ControlGroup>
+      )}
+      {showHome && homeViewport && (
+        <ControlGroup>
+          <ControlButton onClick={handleFlyToHome} label="Return to Home">
+            <Home className="size-4" />
           </ControlButton>
         </ControlGroup>
       )}

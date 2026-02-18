@@ -52,14 +52,14 @@ export function MapStyleSelector({
             value="osm_liberty"
             className="text-xs font-medium focus:bg-primary/5"
           >
-            OpenFreeMap 3D (Liberty)
+            OpenFreeMap 3D
           </SelectItem>
           <SelectSeparator />
           <SelectItem
             value="carto_voyager"
             className="text-xs font-medium focus:bg-primary/5"
           >
-            Carto Voyager (Colorful)
+            Carto Voyager
           </SelectItem>
         </SelectContent>
       </Select>

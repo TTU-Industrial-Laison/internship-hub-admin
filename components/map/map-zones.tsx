@@ -15,12 +15,15 @@ import { MAP_STYLES, type MapStyleKey } from "@/lib/constants/map";
 
 export function MapZones() {
   const mapRef = useRef<MapRef>(null);
-  const [viewport, setViewport] = useState<MapViewport>({
-    center: [-74.006, 40.7128],
-    zoom: 11,
+
+  const initialViewport: MapViewport = {
+    center: [-1.755722, 4.909667],
+    zoom: 17.5,
     bearing: 0,
     pitch: 0,
-  });
+  };
+
+  const [viewport, setViewport] = useState<MapViewport>(initialViewport);
 
   const [style, setStyle] = useState<MapStyleKey>("osm_bright");
   const selectedStyle = MAP_STYLES[style];
@@ -42,13 +45,16 @@ export function MapZones() {
         ref={mapRef}
         viewport={viewport}
         onViewportChange={setViewport}
-        styles={
-          selectedStyle
-            ? { light: selectedStyle, dark: selectedStyle }
-            : undefined
-        }
+        theme="light"
+        styles={selectedStyle}
       >
-        <MapControls showFullscreen showCompass showZoom show3D />
+        <MapControls
+          showFullscreen
+          showZoom
+          show3D
+          showHome
+          homeViewport={initialViewport}
+        />
         <MapStyleSelector value={style} onChange={setStyle} />
         <MapViewportInfo viewport={viewport} />
       </Map>
