@@ -11,7 +11,6 @@ import { API_ENDPOINTS } from "@/lib/constants/api-endpoints";
 
 /**
  * Initializes the auth state by checking the session on mount.
- * Place this component inside StoreProvider (e.g. in the root layout).
  * It renders nothing — it only dispatches to the Redux store.
  */
 export function SessionInitializer() {
