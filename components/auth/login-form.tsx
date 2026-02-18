@@ -34,8 +34,8 @@ export function LoginForm() {
   const { control, handleSubmit, reset } = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "admin@ttu.edu.gh",
-      password: "StrongPassword123!",
+      email: "",
+      password: "",
     },
   });
 
@@ -91,7 +91,7 @@ export function LoginForm() {
                         href="/auth/forgot-password"
                         className={cn(
                           "text-sm font-medium text-indigo-600 hover:text-indigo-500 hover:underline transition-colors",
-                          isPending && "pointer-events-none opacity-50",
+                          isPending && "pointer-events-none opacity-50"
                         )}
                       >
                         Forgot password?
