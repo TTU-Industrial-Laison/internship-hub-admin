@@ -756,7 +756,7 @@ const positionClasses = {
 
 function ControlGroup({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col rounded-md border border-border bg-background shadow-sm overflow-hidden [&>button:not(:last-child)]:border-b [&>button:not(:last-child)]:border-border">
+    <div className="flex flex-col rounded-md border border-gray-400 bg-white shadow-card overflow-hidden [&>button:not(:last-child)]:border-b [&>button:not(:last-child)]:border-gray-400">
       {children}
     </div>
   );

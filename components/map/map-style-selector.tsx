@@ -26,12 +26,12 @@ export function MapStyleSelector({
   const mapContainer = useMemo(() => map?.getContainer(), [map]);
 
   return (
-    <div className="absolute top-3 right-3 z-10 w-48">
+    <div className="absolute top-4 right-3 z-10 w-48">
       <Select
         value={value}
         onValueChange={(val) => onChange(val as MapStyleKey)}
       >
-        <SelectTrigger className="h-9 bg-white backdrop-blur rounded-lg text-xs shadow-card hover:bg-white transition-all font-medium">
+        <SelectTrigger className="h-11! bg-white! backdrop-blur rounded-lg text-xs shadow-none hover:bg-white transition-all font-medium border border-gray-400">
           <div className="flex items-center gap-2">
             <Layers className="size-3.5 text-slate-500" />
             <SelectValue placeholder="Map Style" />
@@ -39,7 +39,7 @@ export function MapStyleSelector({
         </SelectTrigger>
         <SelectContent
           container={mapContainer}
-          className="bg-white/90 backdrop-blur border-slate-200 rounded-lg shadow-xl"
+          className="bg-white backdrop-blur border-slate-200 rounded-lg shadow-card"
         >
           <SelectItem
             value="osm_bright"
