@@ -12,6 +12,7 @@ import { MapViewportInfo } from "./map-viewport-info";
 
 import { MapStyleSelector } from "./map-style-selector";
 import { MAP_STYLES, type MapStyleKey } from "@/lib/constants/map";
+import { MapToolbar } from "./map-toolbar";
 
 export function MapZones() {
   const mapRef = useRef<MapRef>(null);
@@ -55,6 +56,7 @@ export function MapZones() {
           showHome
           homeViewport={initialViewport}
         />
+        <MapToolbar />
         <MapStyleSelector value={style} onChange={setStyle} />
         <MapViewportInfo viewport={viewport} />
       </Map>
