@@ -26,7 +26,7 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: (data: LoginValues) => authMutationsApi.login(data),
     onSuccess: async (data) => {
-      toast.success(data.message || "Logged in successfully");
+      toast.success(data.message ?? "Logged in successfully");
 
       // Fetch session data and store in Redux
       try {
@@ -39,16 +39,23 @@ export const useLogin = () => {
               csrfToken: data.csrfToken,
             })
           );
+
+          // Redirect to change-password if required
+          if (sessionResponse.data.shouldResetPassword) {
+            router.push("/auth/change-password");
+            return;
+          }
         }
-      } catch {
-        // Session fetch failed, but login succeeded — user will be redirected
+      } catch (error) {
+        console.error("Session fetch failed after login:", error);
+        toast.error("Failed to initialize session. Please check your connection.");
       }
 
       router.push("/dashboard");
     },
     onError: (error) => {
       console.error("Login error:", error);
-      toast.error(error.message || "Failed to login");
+      toast.error(error.message ?? "Failed to login");
     },
   });
 };
@@ -60,7 +67,7 @@ export const useRegisterStudent = () => {
     mutationFn: (data: RegisterStudentValues) =>
       authMutationsApi.registerStudent(data),
     onSuccess: (data, variables) => {
-      toast.success(data.message || "Registration successful");
+      toast.success(data.message ?? "Registration successful");
       // Pass email to verify page via query param
       const params = new URLSearchParams();
       params.set("email", variables.email);
@@ -68,7 +75,7 @@ export const useRegisterStudent = () => {
     },
     onError: (error) => {
       console.error("Registration error:", error);
-      toast.error(error.message || "Failed to register");
+      toast.error(error.message ?? "Failed to register");
     },
   });
 };
@@ -79,12 +86,12 @@ export const useVerifyEmail = () => {
   return useMutation({
     mutationFn: (data: VerifyEmailValues) => authMutationsApi.verifyEmail(data),
     onSuccess: (data) => {
-      toast.success(data.message || "Email verified successfully");
+      toast.success(data.message ?? "Email verified successfully");
       router.push("/auth/login");
     },
     onError: (error) => {
       console.error("Verification error:", error);
-      toast.error(error.message || "Failed to verify email");
+      toast.error(error.message ?? "Failed to verify email");
     },
   });
 };
@@ -94,25 +101,30 @@ export const useResendVerification = () => {
     mutationFn: (data: ResendVerificationValues) =>
       authMutationsApi.resendVerification(data),
     onSuccess: (data) => {
-      toast.success(data.message || "Verification code sent");
+      toast.success(data.message ?? "Verification code sent");
     },
     onError: (error) => {
       console.error("Resend verification error:", error);
-      toast.error(error.message || "Failed to resend code");
+      toast.error(error.message ?? "Failed to resend code");
     },
   });
 };
 
 export const useForgotPassword = () => {
+  const router = useRouter();
+
   return useMutation({
     mutationFn: (data: ForgotPasswordValues) =>
       authMutationsApi.forgotPassword(data),
-    onSuccess: (data) => {
-      toast.success(data.message || "Password reset link sent to your email");
+    onSuccess: (data, variables) => {
+      toast.success(data.message ?? "Password reset link sent to your email");
+      const params = new URLSearchParams();
+      params.set("email", variables.email);
+      router.push(`/auth/reset-password?${params.toString()}`);
     },
     onError: (error) => {
       console.error("Forgot password error:", error);
-      toast.error(error.message || "Failed to send reset link");
+      toast.error(error.message ?? "Failed to send reset link");
     },
   });
 };
@@ -124,12 +136,12 @@ export const useResetPassword = () => {
     mutationFn: (data: ResetPasswordValues) =>
       authMutationsApi.resetPassword(data),
     onSuccess: (data) => {
-      toast.success(data.message || "Password reset successfully");
+      toast.success(data.message ?? "Password reset successfully");
       router.push("/auth/login");
     },
     onError: (error) => {
       console.error("Reset password error:", error);
-      toast.error(error.message || "Failed to reset password");
+      toast.error(error.message ?? "Failed to reset password");
     },
   });
 };
@@ -142,30 +154,16 @@ export const useChangePassword = () => {
     mutationFn: (data: ChangePasswordValues) =>
       authMutationsApi.changePassword(data),
     onSuccess: async (data) => {
-      toast.success(data.message || "Password changed successfully");
+      toast.success(data.message ?? "Password changed successfully");
 
-      // Refresh session to update shouldResetPassword status
-      try {
-        const sessionResponse = await api.get(API_ENDPOINTS.AUTH.SESSION);
-        if (sessionResponse.data?.id) {
-          // Keep existing token
-          const csrfToken = localStorage.getItem("csrf_token") || undefined;
-          dispatch(
-            setCredentials({
-              user: sessionResponse.data,
-              csrfToken,
-            })
-          );
-        }
-      } catch (error) {
-        console.error("Failed to refresh session after password change", error);
-      }
-
+      // Clear credentials and redirect to login as per "Please log in again" requirement
+      dispatch(clearCredentials());
+      localStorage.removeItem("csrf_token");
       router.push("/auth/login");
     },
     onError: (error) => {
       console.error("Change password error:", error);
-      toast.error(error.message || "Failed to change password");
+      toast.error(error.message ?? "Failed to change password");
     },
   });
 };
@@ -177,7 +175,7 @@ export const useLogout = () => {
   return useMutation({
     mutationFn: () => authMutationsApi.logout(),
     onSuccess: (data) => {
-      toast.success(data.message || "Logged out successfully");
+      toast.success(data.message ?? "Logged out successfully");
 
       // Clear Redux state
       dispatch(clearCredentials());
@@ -190,7 +188,7 @@ export const useLogout = () => {
     },
     onError: (error: any) => {
       console.error("Logout error:", error);
-      toast.error(error.message || "Failed to logout");
+      toast.error(error.message ?? "Failed to logout");
     },
   });
 };

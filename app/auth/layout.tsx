@@ -10,7 +10,7 @@ export default function AuthLayout({
       {/* LEFT - Hero section */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-slate-900 overflow-hidden text-white">
         {/* Dynamic Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-900" />
+        <div className="absolute inset-0 bg-linear-to-br from-indigo-600 to-purple-900" />
 
         {/* Abstract Shapes */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-20">
@@ -29,7 +29,7 @@ export default function AuthLayout({
             />
           </div>
           <h1 className="mb-4 text-4xl font-extrabold tracking-tight lg:text-5xl drop-shadow-md">
-            Internship-Hub
+            Industrial Liason
           </h1>
           <p className="max-w-md text-lg text-white/80 font-medium leading-relaxed">
             Smarter supervision. Clear insights. Better outcomes for everyone.
