@@ -39,27 +39,27 @@ export function MapStyleSelector({
         </SelectTrigger>
         <SelectContent
           container={mapContainer}
-          className="bg-white backdrop-blur border-slate-200 rounded-lg shadow-card"
+          className="bg-white mt-11 right-5 w-36 backdrop-blur border-slate-200 rounded-lg shadow-card"
         >
           <SelectItem
             value="osm_bright"
             className="text-xs font-medium focus:bg-primary/5"
           >
-            OpenFreeMap Bright
+            Standard Map
           </SelectItem>
           <SelectSeparator />
           <SelectItem
             value="osm_liberty"
             className="text-xs font-medium focus:bg-primary/5"
           >
-            OpenFreeMap 3D
+            Detailed 3D
           </SelectItem>
           <SelectSeparator />
           <SelectItem
             value="carto_voyager"
             className="text-xs font-medium focus:bg-primary/5"
           >
-            Carto Voyager
+            Vibrant World
           </SelectItem>
         </SelectContent>
       </Select>

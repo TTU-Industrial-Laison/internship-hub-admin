@@ -933,14 +933,14 @@ function MapControls({
             onClick={is3D ? handleResetBearing : handle3DView}
             label={is3D ? "Reset to 2D" : "Switch to 3D View"}
           >
-            <Mountain className={cn("size-4 transition-colors")} />
+            <Mountain className={cn("size-4 transition-colors")} strokeWidth={1.5}/>
           </ControlButton>
         </ControlGroup>
       )}
       {showHome && homeViewport && (
         <ControlGroup>
           <ControlButton onClick={handleFlyToHome} label="Return to Home">
-            <Home className="size-4" />
+            <Home className="size-4" strokeWidth={1.5}/>
           </ControlButton>
         </ControlGroup>
       )}
