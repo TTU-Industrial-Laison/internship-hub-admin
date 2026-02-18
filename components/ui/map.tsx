@@ -767,11 +767,13 @@ function ControlButton({
   label,
   children,
   disabled = false,
+  isActive = false,
 }: {
   onClick: () => void;
   label: string;
   children: React.ReactNode;
   disabled?: boolean;
+  isActive?: boolean;
 }) {
   return (
     <button
@@ -779,7 +781,10 @@ function ControlButton({
       aria-label={label}
       type="button"
       className={cn(
-        "flex items-center justify-center size-8 hover:bg-accent dark:hover:bg-accent/40 transition-colors",
+        "flex items-center justify-center size-8 transition-colors",
+        isActive
+          ? "bg-primary text-primary-foreground hover:bg-primary/90"
+          : "hover:bg-accent dark:hover:bg-accent/40",
         disabled && "opacity-50 pointer-events-none cursor-not-allowed"
       )}
       disabled={disabled}
@@ -804,6 +809,7 @@ function MapControls({
   const { map } = useMap();
   const [waitingForLocation, setWaitingForLocation] = useState(false);
   const [is3D, setIs3D] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const handleFlyToHome = useCallback(() => {
     if (!map || !homeViewport) return;
@@ -821,9 +827,17 @@ function MapControls({
     const handleMove = () => {
       setIs3D(map.getPitch() > 0);
     };
+
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
     map.on("move", handleMove);
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+
     return () => {
       map.off("move", handleMove);
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
     };
   }, [map]);
 
@@ -911,6 +925,7 @@ function MapControls({
             onClick={handleLocate}
             label="Find my location"
             disabled={waitingForLocation}
+            isActive={waitingForLocation}
           >
             {waitingForLocation ? (
               <Loader2 className="size-4 animate-spin" />
@@ -922,7 +937,11 @@ function MapControls({
       )}
       {showFullscreen && (
         <ControlGroup>
-          <ControlButton onClick={handleFullscreen} label="Toggle fullscreen">
+          <ControlButton
+            onClick={handleFullscreen}
+            label="Toggle fullscreen"
+            isActive={isFullscreen}
+          >
             <Maximize className="size-4" />
           </ControlButton>
         </ControlGroup>
@@ -932,15 +951,19 @@ function MapControls({
           <ControlButton
             onClick={is3D ? handleResetBearing : handle3DView}
             label={is3D ? "Reset to 2D" : "Switch to 3D View"}
+            isActive={is3D}
           >
-            <Mountain className={cn("size-4 transition-colors")} strokeWidth={1.5}/>
+            <Mountain
+              className={cn("size-4 transition-colors")}
+              strokeWidth={1.5}
+            />
           </ControlButton>
         </ControlGroup>
       )}
       {showHome && homeViewport && (
         <ControlGroup>
           <ControlButton onClick={handleFlyToHome} label="Return to Home">
-            <Home className="size-4" strokeWidth={1.5}/>
+            <Home className="size-4" strokeWidth={1.5} />
           </ControlButton>
         </ControlGroup>
       )}
