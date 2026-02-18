@@ -186,9 +186,9 @@ export const useLogout = () => {
       // Redirect to login
       router.push("/auth/login");
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Logout error:", error);
-      toast.error(error.message ?? "Failed to logout");
+      toast.error(error instanceof Error ? error.message : "Failed to logout");
     },
   });
 };

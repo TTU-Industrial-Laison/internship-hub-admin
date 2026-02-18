@@ -26,6 +26,9 @@ export const authSlice = createSlice({
       state.isAuthenticated = true;
       state.isLoading = false;
     },
+    setCsrfToken: (state, action: PayloadAction<string>) => {
+      state.csrfToken = action.payload;
+    },
     clearCredentials: (state) => {
       state.user = null;
       state.csrfToken = null;
@@ -43,6 +46,7 @@ export const authSlice = createSlice({
 
 export const {
   setCredentials,
+  setCsrfToken,
   clearCredentials,
   setLoading,
   setUploadingImage,
