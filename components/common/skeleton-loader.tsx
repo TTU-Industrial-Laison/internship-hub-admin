@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface SkeletonLoaderProps {
-  type: "table" | "card" | "form";
+  type: "table" | "card" | "form" | "stats-card" | "progress-chart";
   count?: number;
 }
 
@@ -25,6 +25,42 @@ export const SkeletonLoader = ({ type, count = 5 }: SkeletonLoaderProps) => {
             </div>
           ))}
         </div>
+      </div>
+    );
+  }
+
+  if (type === "stats-card") {
+    return (
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[...Array(count)].map((_, i) => (
+          <div
+            key={i}
+            className="p-4 bg-white rounded-lg border border-gray-300 shadow-card"
+          >
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-10 w-10 rounded-full" />
+              <div className="space-y-2 flex-1">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-6 w-16" />
+                <Skeleton className="h-3 w-32" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </section>
+    );
+  }
+
+  if (type === "progress-chart") {
+    return (
+      <div className="flex items-end gap-2 h-full w-full pt-4">
+        {[...Array(count)].map((_, i) => (
+          <Skeleton
+            key={i}
+            className="flex-1"
+            style={{ height: `${Math.random() * 60 + 20}%` }}
+          />
+        ))}
       </div>
     );
   }
