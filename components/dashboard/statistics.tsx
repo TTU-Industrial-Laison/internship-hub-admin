@@ -1,24 +1,55 @@
+"use client";
+
 import React from "react";
 import { GraduationCap, Users, CheckCircle, Clock } from "lucide-react";
+import { useGetSupervisionOverallStats } from "@/lib/hooks/queries/use-supervision-queries";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export function DashboardStats() {
+interface DashboardStatsProps {
+  internshipPeriodId?: string;
+}
+
+export function DashboardStats({ internshipPeriodId }: DashboardStatsProps) {
+  const { data: statsData, isLoading } =
+    useGetSupervisionOverallStats(internshipPeriodId);
+
+  const getGrowthColor = (growth?: string) => {
+    if (!growth) return "text-gray-500";
+    if (growth.startsWith("+")) return "text-green-600";
+    if (growth.startsWith("-")) return "text-red-600";
+    return "text-gray-500";
+  };
+
+  const getCompletionColor = (rate?: number) => {
+    if (rate === undefined) return "text-gray-500";
+    if (rate >= 80) return "text-green-600";
+    if (rate >= 50) return "text-orange-600";
+    return "text-red-600";
+  };
+
   const stats = [
     {
       title: "Total Students",
-      value: "1,247",
-      subtitle: "+12% from last period",
-      subtitleColor: "text-green-600",
+      value: statsData?.students.total.toLocaleString() ?? "0",
+      subtitle: statsData?.students.growth ?? "0% from last period",
+      subtitleColor: getGrowthColor(statsData?.students.growth),
       icon: GraduationCap,
       iconBg: "bg-blue-100",
       iconColor: "text-blue-600",
     },
     {
       title: "Total Supervisors",
-      value: "84",
+      value: statsData?.supervisors.total.toString() ?? "0",
       subtitleParts: [
-        { text: "72 Active", color: "text-green-600" },
+        {
+          text: `${statsData?.supervisors.active ?? 0} Active`,
+          color: "text-green-600",
+        },
         { text: " • ", color: "text-gray-400" },
-        { text: "12 Pending", color: "text-gray-500" },
+        {
+          text: `${statsData?.supervisors.pending ?? 0} Pending`,
+          color: "text-gray-500",
+        },
       ],
       icon: Users,
       iconBg: "bg-teal-100",
@@ -26,16 +57,18 @@ export function DashboardStats() {
     },
     {
       title: "Completed Supervisions",
-      value: "892",
-      subtitle: "71.5% completion rate",
-      subtitleColor: "text-gray-500",
+      value: statsData?.supervision.completed.toLocaleString() ?? "0",
+      subtitle: statsData?.supervision.completionRate ?? "0% completion rate",
+      subtitleColor: getCompletionColor(
+        statsData?.supervision.rawCompletionRate,
+      ),
       icon: CheckCircle,
       iconBg: "bg-green-100",
       iconColor: "text-green-600",
     },
     {
       title: "Pending Supervisions",
-      value: "355",
+      value: statsData?.supervision.pending.toLocaleString() ?? "0",
       subtitle: "Requires attention",
       subtitleColor: "text-orange-600",
       icon: Clock,
@@ -43,6 +76,28 @@ export function DashboardStats() {
       iconColor: "text-orange-600",
     },
   ];
+
+  if (isLoading) {
+    return (
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[...Array(4)].map((_, i) => (
+          <div
+            key={i}
+            className="p-4 bg-white rounded-lg border border-gray-300 shadow-card"
+          >
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-10 w-10 rounded-full" />
+              <div className="space-y-2 flex-1">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-6 w-16" />
+                <Skeleton className="h-3 w-32" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </section>
+    );
+  }
 
   return (
     <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -75,7 +130,9 @@ export function DashboardStats() {
                   ))}
                 </p>
               ) : (
-                <p className={`${stat.subtitleColor} font-medium`}>
+                <p
+                  className={`${stat.subtitleColor || "text-gray-500"} font-medium`}
+                >
                   {stat.subtitle}
                 </p>
               )}

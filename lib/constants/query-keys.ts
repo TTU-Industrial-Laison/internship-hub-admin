@@ -5,4 +5,7 @@ export const Query_Keys = {
     all: (params: ApiQueryParams) => ["internship-periods", JSON.stringify(params)],
     byId: (id: string) => ["internship-periods", id],
   },
-} 
+  supervision: {
+    overallStats: (internshipPeriodId?: string) => ["supervision", "stats", "overall", internshipPeriodId],
+  },
+} as const;
