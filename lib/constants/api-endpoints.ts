@@ -27,6 +27,7 @@ export const API_ENDPOINTS = {
   },
   SUPERVISION: {
     STATS_OVERALL: "/supervision/stats/overall",
+    PROGRESS_CHART: "/supervision/stats/progress-chart",
   },
 };
 

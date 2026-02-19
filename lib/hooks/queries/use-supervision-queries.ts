@@ -9,3 +9,18 @@ export const useGetSupervisionOverallStats = (internshipPeriodId?: string) => {
         enabled: !!internshipPeriodId || internshipPeriodId === undefined, // Fetch even if undefined (backend might handle it) but usually we want at least a placeholder or default
     });
 };
+
+export const useGetSupervisionProgressChart = (params: {
+    internshipPeriodId?: string;
+    interval: "weekly" | "monthly";
+}) => {
+    return useQuery({
+        queryKey: [
+            ...Query_Keys.supervision.overallStats(params.internshipPeriodId),
+            "progress-chart",
+            params.interval,
+        ],
+        queryFn: () => supervisionApi.getProgressChart(params),
+        enabled: !!params.internshipPeriodId || params.internshipPeriodId === undefined,
+    });
+};
