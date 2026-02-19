@@ -3,6 +3,7 @@ import { API_ENDPOINTS } from "@/lib/constants/api-endpoints";
 import {
     SupervisionOverallStats,
     SupervisionProgressData,
+    SupervisionPieChartData,
 } from "@/types/api/supervision";
 
 export const supervisionApi = {
@@ -23,6 +24,15 @@ export const supervisionApi = {
             API_ENDPOINTS.SUPERVISION.PROGRESS_CHART,
             {
                 params,
+            },
+        );
+        return response.data;
+    },
+    getPieChart: async (internshipPeriodId?: string) => {
+        const response = await api.get<SupervisionPieChartData[]>(
+            API_ENDPOINTS.SUPERVISION.PIE_CHART,
+            {
+                params: { internshipPeriodId },
             },
         );
         return response.data;
