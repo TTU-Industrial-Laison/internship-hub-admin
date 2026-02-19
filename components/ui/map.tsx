@@ -246,6 +246,11 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
       ...viewport,
     });
 
+    // Enforce font inheritance for map container
+    if (containerRef.current) {
+      containerRef.current.style.fontFamily = "inherit";
+    }
+
     const styleDataHandler = () => {
       clearStyleTimeout();
       // Delay to ensure style is fully processed before allowing layer operations
@@ -338,6 +343,13 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
 
   return (
     <MapContext.Provider value={contextValue}>
+      <style jsx global>{`
+        .maplibregl-map,
+        .maplibregl-popup-content,
+        .maplibregl-ctrl-group button {
+          font-family: inherit !important;
+        }
+      `}</style>
       <div
         ref={containerRef}
         className={cn("relative w-full h-full", className)}
