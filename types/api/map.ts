@@ -23,13 +23,21 @@ export interface MapDrawingLayerProps {
   onEditZone: (zone: ZoneData) => void;
   /** Called when user wants to delete a zone */
   onDeleteZone: (zoneId: string) => void;
+  /** ID of the zone currently being edited (for vertex editing) */
+  editingZoneId?: string | null;
+  /** Called when a zone's coordinates are updated via vertex dragging */
+  onUpdateZoneCoordinates?: (
+    zoneId: string,
+    coordinates: [number, number][]
+  ) => void;
 }
 
-export interface ZonePropertiesDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+export interface ZonePropertiesPanelProps {
   onSubmit: (data: ZoneFormData) => void;
   onDelete?: () => void;
+  onClose: () => void;
+  /** Called when form values change, for live preview */
+  onValuesChange?: (data: ZoneFormData) => void;
   initialData?: Partial<ZoneFormData>;
   isEditing?: boolean;
 }
