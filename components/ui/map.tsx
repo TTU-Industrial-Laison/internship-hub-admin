@@ -1565,6 +1565,180 @@ function MapClusterLayer<
   return null;
 }
 
+type MapPolygonProps = {
+  /** Optional unique identifier for the polygon layers */
+  id?: string;
+  /** Array of [longitude, latitude] coordinate pairs defining the polygon boundary */
+  coordinates: [number, number][];
+  /** Fill color as CSS hex value (default: "#3b82f6") */
+  fillColor?: string;
+  /** Fill opacity from 0 to 1 (default: 0.3) */
+  fillOpacity?: number;
+  /** Outline color as CSS hex value (default: same as fillColor) */
+  outlineColor?: string;
+  /** Outline width in pixels (default: 2) */
+  outlineWidth?: number;
+  /** Callback when the polygon is clicked */
+  onClick?: (e: MapLibreGL.MapMouseEvent) => void;
+  /** Callback when mouse enters the polygon */
+  onMouseEnter?: () => void;
+  /** Callback when mouse leaves the polygon */
+  onMouseLeave?: () => void;
+  /** Whether the polygon is interactive (default: true) */
+  interactive?: boolean;
+};
+
+function MapPolygon({
+  id: propId,
+  coordinates,
+  fillColor = "#3b82f6",
+  fillOpacity = 0.3,
+  outlineColor,
+  outlineWidth = 2,
+  onClick,
+  onMouseEnter,
+  onMouseLeave,
+  interactive = true,
+}: MapPolygonProps) {
+  const { map, isLoaded } = useMap();
+  const autoId = useId();
+  const id = propId ?? autoId;
+  const sourceId = `polygon-source-${id}`;
+  const fillLayerId = `polygon-fill-${id}`;
+  const outlineLayerId = `polygon-outline-${id}`;
+
+  const resolvedOutlineColor = outlineColor ?? fillColor;
+
+  // Store callbacks in ref to avoid re-registering event listeners
+  const callbacksRef = useRef({ onClick, onMouseEnter, onMouseLeave });
+  callbacksRef.current = { onClick, onMouseEnter, onMouseLeave };
+
+  // Add source and layers on mount
+  useEffect(() => {
+    if (!isLoaded || !map) return;
+
+    map.addSource(sourceId, {
+      type: "geojson",
+      data: {
+        type: "Feature",
+        properties: {},
+        geometry: { type: "Polygon", coordinates: [[]] },
+      },
+    });
+
+    map.addLayer({
+      id: fillLayerId,
+      type: "fill",
+      source: sourceId,
+      paint: {
+        "fill-color": fillColor,
+        "fill-opacity": fillOpacity,
+      },
+    });
+
+    map.addLayer({
+      id: outlineLayerId,
+      type: "line",
+      source: sourceId,
+      layout: { "line-join": "round", "line-cap": "round" },
+      paint: {
+        "line-color": resolvedOutlineColor,
+        "line-width": outlineWidth,
+        "line-opacity": 1,
+      },
+    });
+
+    return () => {
+      try {
+        if (map.getLayer(outlineLayerId)) map.removeLayer(outlineLayerId);
+        if (map.getLayer(fillLayerId)) map.removeLayer(fillLayerId);
+        if (map.getSource(sourceId)) map.removeSource(sourceId);
+      } catch {
+        // ignore
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoaded, map]);
+
+  // Update polygon coordinates
+  useEffect(() => {
+    if (!isLoaded || !map || coordinates.length < 3) return;
+
+    // Close the polygon ring if not already closed
+    const ring = [...coordinates];
+    const first = ring[0];
+    const last = ring[ring.length - 1];
+    if (first[0] !== last[0] || first[1] !== last[1]) {
+      ring.push(first);
+    }
+
+    const source = map.getSource(sourceId) as MapLibreGL.GeoJSONSource;
+    if (source) {
+      source.setData({
+        type: "Feature",
+        properties: {},
+        geometry: { type: "Polygon", coordinates: [ring] },
+      });
+    }
+  }, [isLoaded, map, coordinates, sourceId]);
+
+  // Update paint properties
+  useEffect(() => {
+    if (!isLoaded || !map) return;
+
+    if (map.getLayer(fillLayerId)) {
+      map.setPaintProperty(fillLayerId, "fill-color", fillColor);
+      map.setPaintProperty(fillLayerId, "fill-opacity", fillOpacity);
+    }
+    if (map.getLayer(outlineLayerId)) {
+      map.setPaintProperty(
+        outlineLayerId,
+        "line-color",
+        outlineColor ?? fillColor
+      );
+      map.setPaintProperty(outlineLayerId, "line-width", outlineWidth);
+    }
+  }, [
+    isLoaded,
+    map,
+    fillLayerId,
+    outlineLayerId,
+    fillColor,
+    fillOpacity,
+    outlineColor,
+    outlineWidth,
+  ]);
+
+  // Handle click and hover events
+  useEffect(() => {
+    if (!isLoaded || !map || !interactive) return;
+
+    const handleClick = (e: MapLibreGL.MapMouseEvent) => {
+      callbacksRef.current.onClick?.(e);
+    };
+    const handleMouseEnter = () => {
+      map.getCanvas().style.cursor = "pointer";
+      callbacksRef.current.onMouseEnter?.();
+    };
+    const handleMouseLeave = () => {
+      map.getCanvas().style.cursor = "";
+      callbacksRef.current.onMouseLeave?.();
+    };
+
+    map.on("click", fillLayerId, handleClick);
+    map.on("mouseenter", fillLayerId, handleMouseEnter);
+    map.on("mouseleave", fillLayerId, handleMouseLeave);
+
+    return () => {
+      map.off("click", fillLayerId, handleClick);
+      map.off("mouseenter", fillLayerId, handleMouseEnter);
+      map.off("mouseleave", fillLayerId, handleMouseLeave);
+    };
+  }, [isLoaded, map, fillLayerId, interactive]);
+
+  return null;
+}
+
 export {
   Map,
   useMap,
@@ -1577,6 +1751,7 @@ export {
   MapControls,
   MapRoute,
   MapClusterLayer,
+  MapPolygon,
 };
 
 export type { MapRef, MapViewport };
