@@ -26,7 +26,7 @@ export function MapStyleSelector({
   const mapContainer = useMemo(() => map?.getContainer(), [map]);
 
   return (
-    <div className="absolute top-4 right-3 z-10 w-48">
+    <div className="absolute top-3 right-3 z-10 w-48">
       <Select
         value={value}
         onValueChange={(val) => onChange(val as MapStyleKey)}
