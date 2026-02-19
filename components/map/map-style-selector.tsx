@@ -27,10 +27,7 @@ export function MapStyleSelector({
 
   return (
     <div className="absolute top-3 right-3 z-10 w-48">
-      <Select
-        value={value}
-        onValueChange={(val) => onChange(val as MapStyleKey)}
-      >
+      <Select value={value} onValueChange={(val) => onChange(val)}>
         <SelectTrigger className="h-11! bg-white! backdrop-blur rounded-lg text-xs shadow-none hover:bg-white transition-all font-medium border border-gray-400">
           <div className="flex items-center gap-2">
             <Layers className="size-3.5 text-slate-500" />
