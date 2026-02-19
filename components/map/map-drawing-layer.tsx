@@ -11,6 +11,7 @@ import type { MapDrawingLayerProps } from "@/types/api/map";
 import { Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useZoneDrawing } from "@/lib/hooks/map/use-zone-drawing";
 
 function getPolygonCentroid(coordinates: [number, number][]): [number, number] {
   let sumLng = 0;
@@ -23,15 +24,20 @@ function getPolygonCentroid(coordinates: [number, number][]): [number, number] {
 }
 
 export function MapDrawingLayer({
-  drawingPoints,
-  cursorPosition,
+  isDrawActive,
+  onPolygonComplete,
   zones,
   showBoundaries,
   onEditZone,
   onDeleteZone,
 }: Readonly<MapDrawingLayerProps>) {
+  const { drawingPoints, cursorPosition } = useZoneDrawing({
+    isDrawActive,
+    onPolygonComplete,
+  });
+
   const [activePopupZoneId, setActivePopupZoneId] = useState<string | null>(
-    null,
+    null
   );
 
   // Build the preview polyline: drawing points + cursor position

@@ -10,12 +10,11 @@ export type ZoneData = {
   borderWidth: number;
 };
 
-
 export interface MapDrawingLayerProps {
-  /** Points being placed during active drawing */
-  drawingPoints: [number, number][];
-  /** Current cursor position for live preview line */
-  cursorPosition: [number, number] | null;
+  /** Whether drawing mode is active */
+  isDrawActive: boolean;
+  /** Called when a polygon is completed */
+  onPolygonComplete: (coordinates: [number, number][]) => void;
   /** Completed zones to render */
   zones: ZoneData[];
   /** Whether zone boundaries are visible */
