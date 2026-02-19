@@ -6,14 +6,22 @@ import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
 
-export function MapToolbar() {
-  const [isDrawActive, setIsDrawActive] = useState(false);
-  const [showBoundaries, setShowBoundaries] = useState(true);
+interface MapToolbarProps {
+  isDrawActive: boolean;
+  onDrawActiveChange: (active: boolean) => void;
+  showBoundaries: boolean;
+  onShowBoundariesChange: (show: boolean) => void;
+}
 
+export function MapToolbar({
+  isDrawActive,
+  onDrawActiveChange,
+  showBoundaries,
+  onShowBoundariesChange,
+}: Readonly<MapToolbarProps>) {
   return (
-    <div className="absolute top-3 left-2 z-10 flex items-center bg-white rounded-lg px-2 h-12 min-w-[500px] border border-gray-400 shadow-card">
+    <div className="absolute top-3 left-2 z-10 flex items-center bg-white rounded-lg px-2 h-12 min-w-125 border border-gray-400 shadow-card">
       {/* Search Section */}
       <div className="flex items-center gap-1 px-2 flex-1">
         <Search className="size-4" />
@@ -32,7 +40,7 @@ export function MapToolbar() {
         <Button
           variant={isDrawActive ? "default" : "ghost"}
           size="sm"
-          onClick={() => setIsDrawActive(!isDrawActive)}
+          onClick={() => onDrawActiveChange(!isDrawActive)}
           className={cn(
             "flex items-center gap-2 h-9 px-4 rounded-lg transition-all text-xs",
             isDrawActive
@@ -54,7 +62,7 @@ export function MapToolbar() {
           </div>
           <Switch
             checked={showBoundaries}
-            onCheckedChange={setShowBoundaries}
+            onCheckedChange={onShowBoundariesChange}
             className="scale-75 data-[state=checked]:bg-primary"
           />
         </div>
