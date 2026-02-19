@@ -25,6 +25,9 @@ export const API_ENDPOINTS = {
   INTERNSHIP: {
     PERIODS: "/internship-periods",
   },
-} as const;
+  SUPERVISION: {
+    STATS_OVERALL: "/supervision/stats/overall",
+  },
+};
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
