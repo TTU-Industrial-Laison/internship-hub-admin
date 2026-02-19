@@ -1,7 +1,13 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface SkeletonLoaderProps {
-  type: "table" | "card" | "form" | "stats-card" | "progress-chart";
+  type:
+    | "table"
+    | "card"
+    | "form"
+    | "stats-card"
+    | "progress-chart"
+    | "pie-chart";
   count?: number;
 }
 
@@ -61,6 +67,18 @@ export const SkeletonLoader = ({ type, count = 5 }: SkeletonLoaderProps) => {
             style={{ height: `${Math.random() * 60 + 20}%` }}
           />
         ))}
+      </div>
+    );
+  }
+
+  if (type === "pie-chart") {
+    return (
+      <div className="flex flex-col items-center justify-center h-full w-full gap-4">
+        <Skeleton className="h-48 w-48 rounded-full" />
+        <div className="flex gap-4">
+          <Skeleton className="h-4 w-20" />
+          <Skeleton className="h-4 w-20" />
+        </div>
       </div>
     );
   }

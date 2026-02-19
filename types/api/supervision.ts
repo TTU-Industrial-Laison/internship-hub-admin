@@ -23,3 +23,9 @@ export interface SupervisionProgressData {
     label: string;
     count: number;
 }
+
+export interface SupervisionPieChartData {
+    label: string;
+    value: number;
+    color: string;
+}

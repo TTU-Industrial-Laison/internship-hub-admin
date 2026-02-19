@@ -26,7 +26,7 @@ export default function DashboardPage() {
         <QuickActions />
       </div>
       <div className="grid grid-cols-2 gap-5">
-        <OverallProgress />
+        <OverallProgress internshipPeriodId={selectedPeriodId} />
         <RecentSupervisionLogs />
       </div>
     </div>

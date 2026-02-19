@@ -28,6 +28,7 @@ export const API_ENDPOINTS = {
   SUPERVISION: {
     STATS_OVERALL: "/supervision/stats/overall",
     PROGRESS_CHART: "/supervision/stats/progress-chart",
+    PIE_CHART: "/supervision/stats/pie-chart",
   },
 };
 

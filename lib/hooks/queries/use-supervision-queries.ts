@@ -24,3 +24,14 @@ export const useGetSupervisionProgressChart = (params: {
         enabled: !!params.internshipPeriodId || params.internshipPeriodId === undefined,
     });
 };
+
+export const useGetSupervisionPieChart = (internshipPeriodId?: string) => {
+    return useQuery({
+        queryKey: [
+            ...Query_Keys.supervision.overallStats(internshipPeriodId),
+            "pie-chart",
+        ],
+        queryFn: () => supervisionApi.getPieChart(internshipPeriodId),
+        enabled: !!internshipPeriodId || internshipPeriodId === undefined,
+    });
+};
