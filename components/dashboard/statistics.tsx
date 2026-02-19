@@ -1,9 +1,8 @@
 "use client";
 
-import React from "react";
 import { GraduationCap, Users, CheckCircle, Clock } from "lucide-react";
 import { useGetSupervisionOverallStats } from "@/lib/hooks/queries/use-supervision-queries";
-import { Skeleton } from "@/components/ui/skeleton";
+import { SkeletonLoader } from "@/components/common/skeleton-loader";
 
 interface DashboardStatsProps {
   internshipPeriodId?: string;
@@ -78,25 +77,7 @@ export function DashboardStats({ internshipPeriodId }: DashboardStatsProps) {
   ];
 
   if (isLoading) {
-    return (
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[...Array(4)].map((_, i) => (
-          <div
-            key={i}
-            className="p-4 bg-white rounded-lg border border-gray-300 shadow-card"
-          >
-            <div className="flex items-center gap-3">
-              <Skeleton className="h-10 w-10 rounded-full" />
-              <div className="space-y-2 flex-1">
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-6 w-16" />
-                <Skeleton className="h-3 w-32" />
-              </div>
-            </div>
-          </div>
-        ))}
-      </section>
-    );
+    return <SkeletonLoader type="stats-card" count={4} />;
   }
 
   return (

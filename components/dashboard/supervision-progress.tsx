@@ -2,16 +2,39 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useGetSupervisionProgressChart } from "@/lib/hooks/queries/use-supervision-queries";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+} from "recharts";
+import { SkeletonLoader } from "@/components/common/skeleton-loader";
 
-export const SupervisionProgress = () => {
+interface SupervisionProgressProps {
+  internshipPeriodId?: string;
+}
+
+export const SupervisionProgress = ({
+  internshipPeriodId,
+}: SupervisionProgressProps) => {
   const [timeRange, setTimeRange] = useState<"weekly" | "monthly">("weekly");
+
+  const { data: chartData, isLoading } = useGetSupervisionProgressChart({
+    internshipPeriodId,
+    interval: timeRange,
+  });
 
   return (
     <section className="flex-1 p-4 h-96 bg-white rounded-lg border border-gray-300 shadow-card transition-shadow">
-      <div className="flex justify-between">
-        <h3 className="text-lg font-semibold mb-3">Supervision Progress</h3>
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-lg font-semibold">Supervision Progress</h3>
         {/* Toggle */}
-        <div className="relative inline-flex border border-gray-400/60 shadow-card rounded-full mb-4">
+        <div className="relative inline-flex border border-gray-400/60 shadow-card rounded-full">
           <Button
             onClick={() => setTimeRange("weekly")}
             variant={timeRange === "weekly" ? "default" : "link"}
@@ -36,11 +59,57 @@ export const SupervisionProgress = () => {
         </div>
       </div>
 
-      {/* Chart Area */}
-      <div className="flex items-center justify-center h-full text-gray-400">
-        {timeRange === "weekly"
-          ? "Weekly Chart Placeholder"
-          : "Monthly Chart Placeholder"}
+      <div className="h-[280px] w-full">
+        {isLoading ? (
+          <SkeletonLoader type="progress-chart" count={6} />
+        ) : chartData && chartData.length > 0 ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={chartData}
+              margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+            >
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                stroke="#E5E7EB"
+              />
+              <XAxis
+                dataKey="label"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: "#6B7280", fontSize: 12 }}
+                dy={10}
+              />
+              <YAxis
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: "#6B7280", fontSize: 12 }}
+              />
+              <Tooltip
+                cursor={{ fill: "#F3F4F6" }}
+                contentStyle={{
+                  borderRadius: "8px",
+                  border: "1px solid #E5E7EB",
+                  boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                }}
+              />
+              <Bar dataKey="count" radius={[4, 4, 0, 0]} barSize={40}>
+                {chartData.map((_entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={
+                      index === chartData.length - 1 ? "#0D9488" : "#2DD4BF"
+                    } // Highlight last bar
+                  />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-2">
+            <p className="text-sm">No data available for this period</p>
+          </div>
+        )}
       </div>
     </section>
   );

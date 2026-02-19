@@ -22,7 +22,7 @@ export default function DashboardPage() {
       </div>
       <DashboardStats internshipPeriodId={selectedPeriodId} />
       <div className="flex gap-5">
-        <SupervisionProgress />
+        <SupervisionProgress internshipPeriodId={selectedPeriodId} />
         <QuickActions />
       </div>
       <div className="grid grid-cols-2 gap-5">

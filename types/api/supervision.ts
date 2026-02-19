@@ -18,3 +18,8 @@ export interface SupervisionOverallStats {
         rawCompletionRate: number;
     };
 }
+
+export interface SupervisionProgressData {
+    label: string;
+    count: number;
+}
