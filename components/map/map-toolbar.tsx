@@ -13,7 +13,7 @@ export function MapToolbar() {
   const [showBoundaries, setShowBoundaries] = useState(true);
 
   return (
-    <div className="absolute top-4 left-2 z-10 flex items-center bg-white rounded-lg px-2 h-12 min-w-[500px] border border-gray-400 shadow-card">
+    <div className="absolute top-3 left-2 z-10 flex items-center bg-white rounded-lg px-2 h-12 min-w-[500px] border border-gray-400 shadow-card">
       {/* Search Section */}
       <div className="flex items-center gap-1 px-2 flex-1">
         <Search className="size-4" />
