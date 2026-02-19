@@ -10,7 +10,7 @@ import {
 import type { MapDrawingLayerProps } from "@/types/api/map";
 import { Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useZoneDrawing } from "@/lib/hooks/map/use-zone-drawing";
 
 function getPolygonCentroid(coordinates: [number, number][]): [number, number] {
@@ -23,6 +23,13 @@ function getPolygonCentroid(coordinates: [number, number][]): [number, number] {
   return [sumLng / coordinates.length, sumLat / coordinates.length];
 }
 
+function getMidpoint(
+  p1: [number, number],
+  p2: [number, number]
+): [number, number] {
+  return [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2];
+}
+
 export function MapDrawingLayer({
   isDrawActive,
   onPolygonComplete,
@@ -30,6 +37,8 @@ export function MapDrawingLayer({
   showBoundaries,
   onEditZone,
   onDeleteZone,
+  editingZoneId,
+  onUpdateZoneCoordinates,
 }: Readonly<MapDrawingLayerProps>) {
   const { drawingPoints, cursorPosition } = useZoneDrawing({
     isDrawActive,
@@ -38,6 +47,30 @@ export function MapDrawingLayer({
 
   const [activePopupZoneId, setActivePopupZoneId] = useState<string | null>(
     null
+  );
+
+  // --- Vertex Editing Logic ---
+  const editingZone = zones.find((z) => z.id === editingZoneId);
+
+  const handleVertexDrag = useCallback(
+    (index: number, newPos: { lng: number; lat: number }) => {
+      if (!editingZone || !onUpdateZoneCoordinates) return;
+      const newCoords = [...editingZone.coordinates];
+      newCoords[index] = [newPos.lng, newPos.lat];
+      onUpdateZoneCoordinates(editingZone.id, newCoords);
+    },
+    [editingZone, onUpdateZoneCoordinates]
+  );
+
+  const handleMidpointDragEnd = useCallback(
+    (index: number, newPos: { lng: number; lat: number }) => {
+      if (!editingZone || !onUpdateZoneCoordinates) return;
+      const newCoords = [...editingZone.coordinates];
+      // Insert new vertex after the current index (segment start)
+      newCoords.splice(index + 1, 0, [newPos.lng, newPos.lat]);
+      onUpdateZoneCoordinates(editingZone.id, newCoords);
+    },
+    [editingZone, onUpdateZoneCoordinates]
   );
 
   // Build the preview polyline: drawing points + cursor position
@@ -82,7 +115,7 @@ export function MapDrawingLayer({
 
       {/* Instructions tooltip when drawing */}
       {drawingPoints.length > 0 && drawingPoints.length < 3 && (
-        <div className="absolute bottom-14 left-1/2 -translate-x-1/2 z-20 bg-primary text-white text-xs px-4 py-2 rounded-full whitespace-nowrap backdrop-blur-sm shadow-lg">
+        <div className="absolute bottom-14 left-1/2 -translate-x-1/2 z-20 bg-primary text-white text-xs px-4 py-2 rounded-full whitespace-nowrap backdrop-blur-sm shadow-lg pointer-events-none">
           Click to add points ({3 - drawingPoints.length} more needed) •{" "}
           <kbd className="px-1.5 py-0.5 bg-white/20 rounded text-[10px]">
             Esc
@@ -92,7 +125,7 @@ export function MapDrawingLayer({
       )}
 
       {drawingPoints.length >= 3 && (
-        <div className="absolute bottom-14 left-1/2 -translate-x-1/2 z-20 bg-primary text-white text-xs px-4 py-2 rounded-full whitespace-nowrap backdrop-blur-sm shadow-lg">
+        <div className="absolute bottom-14 left-1/2 -translate-x-1/2 z-20 bg-primary text-white text-xs px-4 py-2 rounded-full whitespace-nowrap backdrop-blur-sm shadow-lg pointer-events-none">
           Double-click or click{" "}
           <span className="px-1.5 py-0.5 bg-white/20 rounded font-medium">
             first point
@@ -116,11 +149,54 @@ export function MapDrawingLayer({
             fillOpacity={zone.transparency}
             outlineColor={zone.color}
             outlineWidth={zone.borderWidth}
-            onClick={() => setActivePopupZoneId(zone.id)}
+            onClick={() => {
+              if (zone.id !== editingZoneId) {
+                setActivePopupZoneId(zone.id);
+              }
+            }}
+            interactive={true}
           />
         ))}
 
-      {/* Zone labels at centroid */}
+      {/* Vertex Editing Handles */}
+      {editingZone &&
+        onUpdateZoneCoordinates &&
+        editingZone.coordinates.map((coord, index) => {
+          const nextIndex = (index + 1) % editingZone.coordinates.length;
+          const nextCoord = editingZone.coordinates[nextIndex];
+          const midpoint = getMidpoint(coord, nextCoord);
+
+          return (
+            <div key={`edit-group-${index}`}>
+              {/* Draggable Vertex Handle */}
+              <MapMarker
+                longitude={coord[0]}
+                latitude={coord[1]}
+                draggable
+                onDrag={(e) => handleVertexDrag(index, e)}
+                onDragEnd={(e) => handleVertexDrag(index, e)}
+              >
+                <MarkerContent>
+                  <div className="size-3.5 rounded-full bg-white border-2 border-slate-600 shadow-sm hover:scale-125 transition-transform cursor-pointer" />
+                </MarkerContent>
+              </MapMarker>
+
+              {/* Midpoint Insertion Handle */}
+              <MapMarker
+                longitude={midpoint[0]}
+                latitude={midpoint[1]}
+                draggable
+                onDragEnd={(e) => handleMidpointDragEnd(index, e)}
+              >
+                <MarkerContent>
+                  <div className="size-2.5 rounded-full bg-white/50 border border-slate-500 shadow-sm hover:bg-white hover:scale-125 transition-all cursor-pointer opacity-60 hover:opacity-100" />
+                </MarkerContent>
+              </MapMarker>
+            </div>
+          );
+        })}
+
+      {/* Zone labels at centroid (hide when editing) */}
       {showBoundaries &&
         zones.map((zone) => {
           const centroid = getPolygonCentroid(zone.coordinates);
@@ -178,6 +254,7 @@ export function MapDrawingLayer({
                     className="flex-1 text-xs h-8 border-gray-300"
                     onClick={() => {
                       setActivePopupZoneId(null);
+                      // Start editing immediately
                       onEditZone(zone);
                     }}
                   >
