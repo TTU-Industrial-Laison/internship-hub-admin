@@ -1,6 +1,3 @@
-"use client";
-
-import React, { useState } from "react";
 import { OverallProgress } from "@/components/dashboard/overall-progress";
 import { QuickActions } from "@/components/dashboard/quick-actions";
 import { RecentSupervisionLogs } from "@/components/dashboard/recent-logs";
@@ -9,24 +6,19 @@ import { SupervisionProgress } from "@/components/dashboard/supervision-progress
 import { PeriodSelector } from "@/components/dashboard/period-selector";
 
 export default function DashboardPage() {
-  const [selectedPeriodId, setSelectedPeriodId] = useState<string>();
-
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <h1 className="text-lg font-semibold mb-2">Overview</h1>
-        <PeriodSelector
-          value={selectedPeriodId}
-          onValueChange={setSelectedPeriodId}
-        />
+        <PeriodSelector />
       </div>
-      <DashboardStats internshipPeriodId={selectedPeriodId} />
+      <DashboardStats />
       <div className="flex gap-5">
-        <SupervisionProgress internshipPeriodId={selectedPeriodId} />
+        <SupervisionProgress />
         <QuickActions />
       </div>
       <div className="grid grid-cols-2 gap-5">
-        <OverallProgress internshipPeriodId={selectedPeriodId} />
+        <OverallProgress />
         <RecentSupervisionLogs />
       </div>
     </div>
