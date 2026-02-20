@@ -18,6 +18,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { PRESET_COLORS } from "@/lib/constants/map";
 import { useEffect } from "react";
@@ -39,8 +40,9 @@ export function ZonePropertiesPanel({
     defaultValues: {
       name: "",
       color: "#60a5fa",
-      transparency: 0.5,
+      transparency: 0.25,
       borderWidth: 2,
+      description: "",
     },
   });
 
@@ -51,6 +53,7 @@ export function ZonePropertiesPanel({
         color: initialData.color ?? "#60a5fa",
         transparency: initialData.transparency ?? 0.5,
         borderWidth: initialData.borderWidth ?? 2,
+        description: initialData.description ?? "",
       });
     }
   }, [initialData, form]);
@@ -91,7 +94,7 @@ export function ZonePropertiesPanel({
       </div>
 
       {/* Form Content */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-1 space-y-4">
         <form
           id="zone-form"
           onSubmit={form.handleSubmit(onSubmit)}
@@ -116,6 +119,30 @@ export function ZonePropertiesPanel({
                     placeholder="e.g. Activity Center"
                     aria-invalid={fieldState.invalid}
                     className="h-9 text-sm border-slate-300"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            {/* Description */}
+            <Controller
+              control={form.control}
+              name="description"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="zone-description" className="text-xs">
+                    Description
+                  </FieldLabel>
+                  <Textarea
+                    {...field}
+                    id="zone-description"
+                    placeholder="Add a description"
+                    aria-invalid={fieldState.invalid}
+                    className="min-h-16 text-sm border-slate-300 resize-none"
+                    rows={3}
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
