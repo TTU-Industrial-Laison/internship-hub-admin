@@ -1,9 +1,26 @@
-import { ArrowRight } from "lucide-react";
+import { PlusCircle, UserPlus, Map, Download, ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
-import { actions } from "@/lib/constants/navigation";
 
 export const QuickActions = () => {
- 
+  const actions = [
+    {
+      label: "Add Student",
+      icon: PlusCircle,
+    },
+    {
+      label: "Invite Supervisor",
+      icon: UserPlus,
+    },
+    {
+      label: "Manage Zones",
+      icon: Map,
+    },
+    {
+      label: "Export Report",
+      icon: Download,
+    },
+  ];
+
   return (
     <section className="max-w-70 w-full p-4 bg-white rounded-lg border border-gray-300 shadow-card">
       <h3 className="text-lg font-semibold mb-2">Quick Actions</h3>

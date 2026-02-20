@@ -1,4 +1,10 @@
-import { Calendar, GraduationCap, LayoutDashboard, Map, Users } from "lucide-react";
+import {
+  Calendar,
+  GraduationCap,
+  LayoutDashboard,
+  Map,
+  Users,
+} from "lucide-react";
 
 export const sideBarNavItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
