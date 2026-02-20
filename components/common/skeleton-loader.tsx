@@ -1,5 +1,32 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
+export const ActivityListSkeleton = ({ count = 4 }: { count?: number }) => (
+  <div className="space-y-6">
+    {[...Array(count)].map((_, i) => (
+      <div key={i} className="flex gap-4 items-start">
+        <Skeleton className="h-10 w-10 rounded-full shrink-0" />
+        <div className="space-y-2 flex-1 pt-1">
+          <Skeleton className="h-4 w-1/3" />
+          <Skeleton className="h-3 w-2/3" />
+          <Skeleton className="h-3 w-1/4" />
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+export const RecentActivitySkeleton = () => (
+  <section className="p-6 h-96 bg-white rounded-lg border border-gray-300 shadow-card flex flex-col overflow-hidden">
+    <div className="flex justify-between items-center mb-6">
+      <Skeleton className="h-7 w-40" />
+      <Skeleton className="h-4 w-16" />
+    </div>
+    <div className="flex-1 overflow-hidden">
+      <ActivityListSkeleton count={4} />
+    </div>
+  </section>
+);
+
 interface SkeletonLoaderProps {
   type:
     | "table"
@@ -87,20 +114,7 @@ export const SkeletonLoader = ({ type, count = 5 }: SkeletonLoaderProps) => {
   }
 
   if (type === "activity-list") {
-    return (
-      <div className="space-y-6">
-        {[...Array(count)].map((_, i) => (
-          <div key={i} className="flex gap-4 items-start">
-            <Skeleton className="h-10 w-10 rounded-full shrink-0" />
-            <div className="space-y-2 flex-1 pt-1">
-              <Skeleton className="h-4 w-1/3" />
-              <Skeleton className="h-3 w-2/3" />
-              <Skeleton className="h-3 w-1/4" />
-            </div>
-          </div>
-        ))}
-      </div>
-    );
+    return <ActivityListSkeleton count={count} />;
   }
 
   // Add other types as needed

@@ -1,7 +1,9 @@
 "use client";
 
 import { useGetSupervisionActivities } from "@/lib/hooks/queries/use-supervision-queries";
-import { SkeletonLoader } from "@/components/common/skeleton-loader";
+import {
+  RecentActivitySkeleton,
+} from "@/components/common/skeleton-loader";
 import { formatDistanceToNow } from "date-fns";
 import { Check, UserPlus, Map, FileText, LucideIcon } from "lucide-react";
 
@@ -49,6 +51,10 @@ const ACTION_CONFIG: Record<
 export const RecentSupervisionLogs = () => {
   const { data: activities, isLoading } = useGetSupervisionActivities(10);
 
+  if (isLoading) {
+    return <RecentActivitySkeleton />;
+  }
+
   return (
     <section className="p-6 h-96 bg-white rounded-lg border border-gray-300 shadow-card transition-shadow overflow-hidden flex flex-col">
       <div className="flex justify-between items-center mb-6">
@@ -59,9 +65,7 @@ export const RecentSupervisionLogs = () => {
       </div>
 
       <div className="flex-1 overflow-y-auto pr-2 space-y-6 scrollbar-hide">
-        {isLoading ? (
-          <SkeletonLoader type="activity-list" count={4} />
-        ) : activities && activities.length > 0 ? (
+        {activities && activities.length > 0 ? (
           activities.map((activity) => {
             const config =
               ACTION_CONFIG[activity.action] || ACTION_CONFIG.DEFAULT;
