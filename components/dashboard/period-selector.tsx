@@ -12,15 +12,11 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
-import {
-  selectSelectedPeriodId,
-  setSelectedPeriodId,
-} from "@/lib/store/slices/dashboard-slice";
+import { useAppDispatch } from "@/lib/store/hooks";
+import { setSelectedPeriodId } from "@/lib/store/slices/dashboard-slice";
 
 export function PeriodSelector() {
   const dispatch = useAppDispatch();
-  const selectedPeriodId = useAppSelector(selectSelectedPeriodId);
 
   const { data: periods, isLoading } = useGetAllInternshipPeriods({
     page: 1,
@@ -32,10 +28,7 @@ export function PeriodSelector() {
   }
 
   return (
-    <Select
-      value={selectedPeriodId ?? ""}
-      onValueChange={(val) => dispatch(setSelectedPeriodId(val))}
-    >
+    <Select onValueChange={(val) => dispatch(setSelectedPeriodId(val))}>
       <SelectTrigger className="bg-white shadow-card border-gray-300 rounded-lg">
         <SelectValue placeholder="Select Internship Period" />
       </SelectTrigger>
