@@ -33,7 +33,7 @@ export function PeriodSelector() {
 
   return (
     <Select
-      value={selectedPeriodId}
+      value={selectedPeriodId ?? ""}
       onValueChange={(val) => dispatch(setSelectedPeriodId(val))}
     >
       <SelectTrigger className="bg-white shadow-card border-gray-300 rounded-lg">
