@@ -14,14 +14,11 @@ import {
   Cell,
 } from "recharts";
 import { SkeletonLoader } from "@/components/common/skeleton-loader";
+import { useAppSelector } from "@/lib/store/hooks";
+import { selectSelectedPeriodId } from "@/lib/store/slices/dashboard-slice";
 
-interface SupervisionProgressProps {
-  internshipPeriodId?: string;
-}
-
-export const SupervisionProgress = ({
-  internshipPeriodId,
-}: SupervisionProgressProps) => {
+export const SupervisionProgress = () => {
+  const internshipPeriodId = useAppSelector(selectSelectedPeriodId);
   const [timeRange, setTimeRange] = useState<"weekly" | "monthly">("weekly");
 
   const { data: chartData, isLoading } = useGetSupervisionProgressChart({

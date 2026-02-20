@@ -12,14 +12,11 @@ import {
 import { useGetSupervisionPieChart } from "@/lib/hooks/queries/use-supervision-queries";
 import { SkeletonLoader } from "@/components/common/skeleton-loader";
 import { SupervisionPieChartData } from "@/types/api/supervision";
+import { useAppSelector } from "@/lib/store/hooks";
+import { selectSelectedPeriodId } from "@/lib/store/slices/dashboard-slice";
 
-interface OverallProgressProps {
-  internshipPeriodId?: string;
-}
-
-export const OverallProgress = ({
-  internshipPeriodId,
-}: OverallProgressProps) => {
+export const OverallProgress = () => {
+  const internshipPeriodId = useAppSelector(selectSelectedPeriodId);
   const { data: chartData, isLoading } =
     useGetSupervisionPieChart(internshipPeriodId);
 
@@ -46,7 +43,7 @@ export const OverallProgress = ({
                 {chartData.map(
                   (entry: SupervisionPieChartData, index: number) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
-                  ),
+                  )
                 )}
               </Pie>
               <Tooltip

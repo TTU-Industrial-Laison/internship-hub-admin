@@ -3,12 +3,11 @@
 import { GraduationCap, Users, CheckCircle, Clock } from "lucide-react";
 import { useGetSupervisionOverallStats } from "@/lib/hooks/queries/use-supervision-queries";
 import { SkeletonLoader } from "@/components/common/skeleton-loader";
+import { useAppSelector } from "@/lib/store/hooks";
+import { selectSelectedPeriodId } from "@/lib/store/slices/dashboard-slice";
 
-interface DashboardStatsProps {
-  internshipPeriodId?: string;
-}
-
-export function DashboardStats({ internshipPeriodId }: DashboardStatsProps) {
+export function DashboardStats() {
+  const internshipPeriodId = useAppSelector(selectSelectedPeriodId);
   const { data: statsData, isLoading } =
     useGetSupervisionOverallStats(internshipPeriodId);
 
@@ -59,7 +58,7 @@ export function DashboardStats({ internshipPeriodId }: DashboardStatsProps) {
       value: statsData?.supervision.completed.toLocaleString() ?? "0",
       subtitle: statsData?.supervision.completionRate ?? "0% completion rate",
       subtitleColor: getCompletionColor(
-        statsData?.supervision.rawCompletionRate,
+        statsData?.supervision.rawCompletionRate
       ),
       icon: CheckCircle,
       iconBg: "bg-green-100",
@@ -112,7 +111,9 @@ export function DashboardStats({ internshipPeriodId }: DashboardStatsProps) {
                 </p>
               ) : (
                 <p
-                  className={`${stat.subtitleColor || "text-gray-500"} font-medium`}
+                  className={`${
+                    stat.subtitleColor || "text-gray-500"
+                  } font-medium`}
                 >
                   {stat.subtitle}
                 </p>
