@@ -4,6 +4,7 @@ import {
     SupervisionOverallStats,
     SupervisionProgressData,
     SupervisionPieChartData,
+    SupervisionActivity,
 } from "@/types/api/supervision";
 
 export const supervisionApi = {
@@ -33,6 +34,15 @@ export const supervisionApi = {
             API_ENDPOINTS.SUPERVISION.PIE_CHART,
             {
                 params: { internshipPeriodId },
+            },
+        );
+        return response.data;
+    },
+    getActivities: async (limit: number = 5) => {
+        const response = await api.get<SupervisionActivity[]>(
+            API_ENDPOINTS.SUPERVISION.ACTIVITIES,
+            {
+                params: { limit },
             },
         );
         return response.data;

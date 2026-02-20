@@ -15,8 +15,17 @@ import { SupervisionPieChartData } from "@/types/api/supervision";
 import { useAppSelector } from "@/lib/store/hooks";
 import { selectSelectedPeriodId } from "@/lib/store/slices/dashboard-slice";
 
-export const OverallProgress = () => {
-  const internshipPeriodId = useAppSelector(selectSelectedPeriodId);
+interface OverallProgressProps {
+  internshipPeriodId?: string;
+}
+
+export const OverallProgress = ({
+  internshipPeriodId: propPeriodId,
+}: OverallProgressProps) => {
+  const reduxSelectedPeriodId = useAppSelector(selectSelectedPeriodId);
+  const internshipPeriodId =
+    propPeriodId !== undefined ? propPeriodId : reduxSelectedPeriodId;
+
   const { data: chartData, isLoading } =
     useGetSupervisionPieChart(internshipPeriodId);
 
@@ -43,7 +52,7 @@ export const OverallProgress = () => {
                 {chartData.map(
                   (entry: SupervisionPieChartData, index: number) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
-                  )
+                  ),
                 )}
               </Pie>
               <Tooltip

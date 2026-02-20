@@ -29,3 +29,20 @@ export interface SupervisionPieChartData {
     value: number;
     color: string;
 }
+
+export interface SupervisionActivity {
+    id: string;
+    actorId: string | null;
+    action: string;
+    entityType: string;
+    entityId: string | null;
+    details: string;
+    metadata: Record<string, any>;
+    createdAt: string;
+    actor: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        role: "ADMIN" | "SUPERVISOR" | "STUDENT";
+    } | null;
+}

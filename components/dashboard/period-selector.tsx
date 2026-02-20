@@ -11,16 +11,30 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import {
   selectSelectedPeriodId,
   setSelectedPeriodId,
 } from "@/lib/store/slices/dashboard-slice";
 
-export function PeriodSelector() {
+interface PeriodSelectorProps {
+  value?: string;
+  onValueChange?: (value: string) => void;
+}
+
+export function PeriodSelector({ value, onValueChange }: PeriodSelectorProps) {
   const dispatch = useAppDispatch();
-  const selectedPeriodId = useAppSelector(selectSelectedPeriodId);
+  const reduxSelectedPeriodId = useAppSelector(selectSelectedPeriodId);
+
+  const selectedPeriodId = value !== undefined ? value : reduxSelectedPeriodId;
+
+  const handleValueChange = (val: string) => {
+    if (onValueChange) {
+      onValueChange(val);
+    } else {
+      dispatch(setSelectedPeriodId(val));
+    }
+  };
 
   const { data: periods, isLoading } = useGetAllInternshipPeriods({
     page: 1,
