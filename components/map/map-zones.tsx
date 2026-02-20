@@ -58,6 +58,7 @@ export function MapZones() {
               color: previewZoneParams.color,
               transparency: previewZoneParams.transparency,
               borderWidth: previewZoneParams.borderWidth,
+              description: previewZoneParams.description,
             }
           : z
       );
@@ -65,13 +66,13 @@ export function MapZones() {
 
     // If creating, add a temporary zone
     if (pendingCoordinates) {
-      const tempId = "temp-new-zone";
       const newZone: ZoneData = {
-        id: tempId,
+        id: "temp-new-zone",
         name: previewZoneParams?.name || "",
         color: previewZoneParams?.color || "#60a5fa",
         transparency: previewZoneParams?.transparency ?? 0.5,
         borderWidth: previewZoneParams?.borderWidth ?? 2,
+        description: previewZoneParams?.description,
         coordinates: pendingCoordinates,
       };
       return [...zones, newZone];
@@ -105,6 +106,7 @@ export function MapZones() {
                   color: data.color,
                   transparency: data.transparency,
                   borderWidth: data.borderWidth,
+                  description: data.description,
                   // Keep current coordinates (they might have been edited)
                   coordinates: editingZone.coordinates,
                 }
@@ -119,6 +121,7 @@ export function MapZones() {
           coordinates: pendingCoordinates,
           transparency: data.transparency,
           borderWidth: data.borderWidth,
+          description: data.description,
         };
         setZones((prev) => [...prev, newZone]);
       }
@@ -164,6 +167,7 @@ export function MapZones() {
       color: zone.color,
       transparency: zone.transparency,
       borderWidth: zone.borderWidth,
+      description: zone.description,
     });
     setPanelOpen(true);
   }, []);
@@ -255,6 +259,7 @@ export function MapZones() {
                     color: editingZone.color,
                     transparency: editingZone.transparency,
                     borderWidth: editingZone.borderWidth,
+                    description: editingZone.description,
                   }
                 : undefined
             }

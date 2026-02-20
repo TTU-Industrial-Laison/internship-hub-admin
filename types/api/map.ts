@@ -8,6 +8,7 @@ export type ZoneData = {
   coordinates: [number, number][];
   transparency: number;
   borderWidth: number;
+  description?: string;
 };
 
 export interface MapDrawingLayerProps {
