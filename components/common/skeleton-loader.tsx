@@ -64,7 +64,9 @@ export const SkeletonLoader = ({ type, count = 5 }: SkeletonLoaderProps) => {
           <Skeleton
             key={i}
             className="flex-1"
-            style={{ height: `${Math.random() * 60 + 20}%` }}
+            style={{
+              height: `${Math.max(20, ((i + 1) * 37) % 80)}%`,
+            }}
           />
         ))}
       </div>
