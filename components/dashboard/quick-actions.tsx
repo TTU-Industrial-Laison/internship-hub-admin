@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
-import { quickActions } from "@/lib/constants/navigation";
+import { actions } from "@/lib/constants/navigation";
 
 export const QuickActions = () => {
  
@@ -9,7 +9,7 @@ export const QuickActions = () => {
       <h3 className="text-lg font-semibold mb-2">Quick Actions</h3>
 
       <div className="space-y-3">
-        {quickActions.map((action) => {
+        {actions.map((action) => {
           const Icon = action.icon;
 
           return (
