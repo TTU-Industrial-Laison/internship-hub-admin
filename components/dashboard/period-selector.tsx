@@ -46,7 +46,10 @@ export function PeriodSelector({ value, onValueChange }: PeriodSelectorProps) {
   }
 
   return (
-    <Select value={selectedPeriodId} onValueChange={handleValueChange}>
+    <Select
+      value={selectedPeriodId ?? ""}
+      onValueChange={(val) => dispatch(setSelectedPeriodId(val))}
+    >
       <SelectTrigger className="bg-white shadow-card border-gray-300 rounded-lg">
         <SelectValue placeholder="Select Internship Period" />
       </SelectTrigger>
