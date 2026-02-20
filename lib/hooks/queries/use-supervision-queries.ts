@@ -35,3 +35,10 @@ export const useGetSupervisionPieChart = (internshipPeriodId?: string) => {
         enabled: !!internshipPeriodId || internshipPeriodId === undefined,
     });
 };
+
+export const useGetSupervisionActivities = (limit: number = 10) => {
+    return useQuery({
+        queryKey: ["supervision", "activities", limit],
+        queryFn: () => supervisionApi.getActivities(limit),
+    });
+};

@@ -6,8 +6,17 @@ import { SkeletonLoader } from "@/components/common/skeleton-loader";
 import { useAppSelector } from "@/lib/store/hooks";
 import { selectSelectedPeriodId } from "@/lib/store/slices/dashboard-slice";
 
-export function DashboardStats() {
-  const internshipPeriodId = useAppSelector(selectSelectedPeriodId);
+interface DashboardStatsProps {
+  internshipPeriodId?: string;
+}
+
+export function DashboardStats({
+  internshipPeriodId: propPeriodId,
+}: DashboardStatsProps) {
+  const reduxSelectedPeriodId = useAppSelector(selectSelectedPeriodId);
+  const internshipPeriodId =
+    propPeriodId !== undefined ? propPeriodId : reduxSelectedPeriodId;
+
   const { data: statsData, isLoading } =
     useGetSupervisionOverallStats(internshipPeriodId);
 
@@ -58,7 +67,7 @@ export function DashboardStats() {
       value: statsData?.supervision.completed.toLocaleString() ?? "0",
       subtitle: statsData?.supervision.completionRate ?? "0% completion rate",
       subtitleColor: getCompletionColor(
-        statsData?.supervision.rawCompletionRate
+        statsData?.supervision.rawCompletionRate,
       ),
       icon: CheckCircle,
       iconBg: "bg-green-100",
