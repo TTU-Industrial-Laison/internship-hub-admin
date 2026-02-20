@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useGetAllInternshipPeriods } from "@/lib/hooks/queries/use-internship-queries";
 import {
   Select,
@@ -16,6 +16,7 @@ import {
   selectSelectedPeriodId,
   setSelectedPeriodId,
 } from "@/lib/store/slices/dashboard-slice";
+import { InternshipPeriod } from "@/types/api/internship-period";
 
 interface PeriodSelectorProps {
   value?: string;
@@ -28,6 +29,34 @@ export function PeriodSelector({ value, onValueChange }: PeriodSelectorProps) {
 
   const selectedPeriodId = value !== undefined ? value : reduxSelectedPeriodId;
 
+  const { data: periods, isLoading } = useGetAllInternshipPeriods({
+    page: 1,
+    limit: 100, // Get all periods for the dropdown
+  });
+
+  useEffect(() => {
+    if (!selectedPeriodId && periods?.data && periods.data.length > 0) {
+      const ongoingPeriods = periods.data.filter(
+        (p: InternshipPeriod) => p.status === "ONGOING"
+      );
+
+      if (ongoingPeriods.length > 0) {
+        // Sort by startDate in descending order to get the latest ongoing period
+        const latestOngoing = [...ongoingPeriods].sort(
+          (a, b) =>
+            new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+        )[0];
+
+        // Trigger the selection
+        if (onValueChange) {
+          onValueChange(latestOngoing.id);
+        } else {
+          dispatch(setSelectedPeriodId(latestOngoing.id));
+        }
+      }
+    }
+  }, [periods, selectedPeriodId, dispatch, onValueChange]);
+
   const handleValueChange = (val: string) => {
     if (onValueChange) {
       onValueChange(val);
@@ -36,11 +65,6 @@ export function PeriodSelector({ value, onValueChange }: PeriodSelectorProps) {
     }
   };
 
-  const { data: periods, isLoading } = useGetAllInternshipPeriods({
-    page: 1,
-    limit: 100, // Get all periods for the dropdown
-  });
-
   if (isLoading) {
     return <Skeleton className="h-9 w-[200px]" />;
   }
@@ -48,7 +72,7 @@ export function PeriodSelector({ value, onValueChange }: PeriodSelectorProps) {
   return (
     <Select
       value={selectedPeriodId ?? ""}
-      onValueChange={(val) => dispatch(setSelectedPeriodId(val))}
+      onValueChange={handleValueChange}
     >
       <SelectTrigger className="bg-white shadow-card border-gray-300 rounded-lg">
         <SelectValue placeholder="Select Internship Period" />
