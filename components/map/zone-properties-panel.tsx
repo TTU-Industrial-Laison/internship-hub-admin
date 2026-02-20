@@ -39,7 +39,7 @@ export function ZonePropertiesPanel({
     defaultValues: {
       name: "",
       color: "#60a5fa",
-      transparency: 0.5,
+      transparency: 0.25,
       borderWidth: 2,
     },
   });
