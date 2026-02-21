@@ -12,23 +12,7 @@ import { Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useCallback } from "react";
 import { useZoneDrawing } from "@/lib/hooks/map/use-zone-drawing";
-
-function getPolygonCentroid(coordinates: [number, number][]): [number, number] {
-  let sumLng = 0;
-  let sumLat = 0;
-  for (const [lng, lat] of coordinates) {
-    sumLng += lng;
-    sumLat += lat;
-  }
-  return [sumLng / coordinates.length, sumLat / coordinates.length];
-}
-
-function getMidpoint(
-  p1: [number, number],
-  p2: [number, number]
-): [number, number] {
-  return [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2];
-}
+import { getMidpoint, getPolygonCentroid } from "@/lib/utils";
 
 export function MapDrawingLayer({
   isDrawActive,

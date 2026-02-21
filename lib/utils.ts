@@ -51,3 +51,21 @@ export const getStatusColor = (status: string) => {
 export const formatDate = (isoString: string): string => {
   return format(new Date(isoString), "do MMMM yyyy");
 };
+
+
+export function getPolygonCentroid(coordinates: [number, number][]): [number, number] {
+  let sumLng = 0;
+  let sumLat = 0;
+  for (const [lng, lat] of coordinates) {
+    sumLng += lng;
+    sumLat += lat;
+  }
+  return [sumLng / coordinates.length, sumLat / coordinates.length];
+}
+
+export function getMidpoint(
+  p1: [number, number],
+  p2: [number, number]
+): [number, number] {
+  return [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2];
+}
