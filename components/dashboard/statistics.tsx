@@ -6,16 +6,8 @@ import { SkeletonLoader } from "@/components/common/skeleton-loader";
 import { useAppSelector } from "@/lib/store/hooks";
 import { selectSelectedPeriodId } from "@/lib/store/slices/dashboard-slice";
 
-interface DashboardStatsProps {
-  internshipPeriodId?: string;
-}
-
-export function DashboardStats({
-  internshipPeriodId: propPeriodId,
-}: DashboardStatsProps) {
-  const reduxSelectedPeriodId = useAppSelector(selectSelectedPeriodId);
-  const internshipPeriodId =
-    propPeriodId !== undefined ? propPeriodId : reduxSelectedPeriodId;
+export function DashboardStats() {
+  const internshipPeriodId = useAppSelector(selectSelectedPeriodId);
 
   const { data: statsData, isLoading } =
     useGetSupervisionOverallStats(internshipPeriodId);

@@ -18,16 +18,9 @@ import {
 } from "@/lib/store/slices/dashboard-slice";
 import { InternshipPeriod } from "@/types/api/internship-period";
 
-interface PeriodSelectorProps {
-  value?: string;
-  onValueChange?: (value: string) => void;
-}
-
-export function PeriodSelector({ value, onValueChange }: PeriodSelectorProps) {
+export function PeriodSelector() {
   const dispatch = useAppDispatch();
-  const reduxSelectedPeriodId = useAppSelector(selectSelectedPeriodId);
-
-  const selectedPeriodId = value !== undefined ? value : reduxSelectedPeriodId;
+  const selectedPeriodId = useAppSelector(selectSelectedPeriodId);
 
   const { data: periods, isLoading } = useGetAllInternshipPeriods({
     page: 1,
@@ -47,23 +40,10 @@ export function PeriodSelector({ value, onValueChange }: PeriodSelectorProps) {
             new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
         )[0];
 
-        // Trigger the selection
-        if (onValueChange) {
-          onValueChange(latestOngoing.id);
-        } else {
-          dispatch(setSelectedPeriodId(latestOngoing.id));
-        }
+        dispatch(setSelectedPeriodId(latestOngoing.id));
       }
     }
-  }, [periods, selectedPeriodId, dispatch, onValueChange]);
-
-  const handleValueChange = (val: string) => {
-    if (onValueChange) {
-      onValueChange(val);
-    } else {
-      dispatch(setSelectedPeriodId(val));
-    }
-  };
+  }, [periods, selectedPeriodId, dispatch]);
 
   if (isLoading) {
     return <Skeleton className="h-9 w-[200px]" />;
@@ -72,7 +52,7 @@ export function PeriodSelector({ value, onValueChange }: PeriodSelectorProps) {
   return (
     <Select
       value={selectedPeriodId ?? ""}
-      onValueChange={handleValueChange}
+      onValueChange={(val) => dispatch(setSelectedPeriodId(val))}
     >
       <SelectTrigger className="bg-white shadow-card border-gray-300 rounded-lg">
         <SelectValue placeholder="Select Internship Period" />
